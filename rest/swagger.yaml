@@ -1,0 +1,182 @@
+swagger: '2.0'
+info:
+  description: |
+    This is an OMA LwM2M registry service.
+  version: 1.0.0
+  title: Registry Service
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    name: aliaksei.zhuk@dualinventive.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: www.openmobilealliance.org
+basePath: /api/lwm2m/v1
+schemes:
+  - http
+paths:
+  /Object:
+    get:
+      tags:
+        - Object
+      summary: Get metadata of all objects
+      description: 'Retrieve a JSON containing all the metadata information on all the Object Versions'
+      operationId: getObjects
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: ObjectVersion
+          description: Version of object to retrieve
+          required: false
+          type: string
+        - in: query
+          name: ObjectID
+          description: ID of object to retrieve
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/Objects'
+
+  /ObjectDetails:
+    get:
+      tags:
+        - Object
+      summary: Get details of a single object
+      description: 'Retrieve an XML containing the detailed description of a single object'
+      operationId: getObject
+      consumes:
+        - text/xml
+      produces:
+        - text/xml
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/LWM2M'
+
+definitions:
+  Objects:
+    type: array
+    items:
+      $ref: '#/definitions/ObjectMeta'
+
+  ObjectMeta:
+    properties:
+      ObjectID:
+        type: integer
+      Ver:
+        type: string
+      URN:
+        type: string
+      Name:
+        type: string
+      Description:
+        type: string
+      Owner:
+        type: string
+      Label:
+        type: string
+      ObjectLink:
+        type: string
+      ObjectLinkVisible:
+        type: string
+      SpecLink:
+        type: string
+      SpecLinkVisible:
+        type: string
+      VortoLink:
+        type: string
+
+  LWM2M:
+    type: object
+    properties:
+      Object:
+        $ref: '#/definitions/Object'
+
+  Object:
+    type: object
+    properties:
+      Name:
+        type: string
+      Description1:
+        type: string
+      Description2:
+        type: string
+      ObjectID:
+        type: integer
+      ObjectURN:
+        type: string
+      LWM2MVersion:
+        type: string
+      ObjectVersion:
+        type: string
+      MultipleInstances:
+        $ref: '#/definitions/InstanceType'
+      Mandatory:
+        $ref: '#/definitions/MandatoryType'
+      Resources:
+        properties:
+          Item:
+            type: array
+            items:
+              $ref: '#/definitions/Resource'
+
+  Resource:
+    properties:
+      ID:
+        type: integer
+        xml:
+          name: 'ID'
+          attribute: true
+      Name:
+        type: string
+      Operations:
+        $ref: '#/definitions/OperationType'
+      MultipleInstances:
+        $ref: '#/definitions/InstanceType'
+      Mandatory:
+        $ref: '#/definitions/MandatoryType'
+      Type:
+        $ref: '#/definitions/Type'
+      RangeEnumeration:
+        type: string
+      Units:
+        type: string
+      Description:
+        type: string
+
+  Type:
+    type: string
+    enum:
+      - String
+      - Boolean
+      - Integer
+      - Float
+      - ObjLink
+      - Opaque
+
+  OperationType:
+    type: string
+    enum:
+      - R
+      - W
+      - RW
+      - E
+
+  InstanceType:
+    type: string
+    enum:
+      - Multiple
+      - Single
+
+  MandatoryType:
+    type: string
+    enum:
+      - Mandatory
+      - Optional
