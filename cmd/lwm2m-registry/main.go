@@ -18,6 +18,7 @@ var (
 	objectVersion = "latest"
 )
 
+// TODO implement unit tests
 func main() {
 	// Get all objects meta
 	objects, err := GetObjectsMeta()
@@ -47,14 +48,6 @@ func GetObjectsMeta() (models.Objects, error) {
 	return objects.Payload, nil
 }
 
-// TODO implement structure with New() which would accept flag `InitializeRegistry`
-//  to cache meta and/or details about objects in order to provide search interface
-// TODO implement `Refresh` to update the cached registry
-// TODO implement `FindObjectByID`, `FindResourceByID`,`FindObjectByName`, `FindObjectByNameLike`,
-//  `FindResourceByName`,`FindResourceByNameLike`,`FindObjectByDescriptionLike`, `FindResourceByDescriptionLike`
-// TODO implement `Throttle` setting to decrease load on OMAs API
-// TODO implement registry export and import to/from file
-
 // GetObject retrieve single object
 func GetObject() error {
 	objects, err := GetObjectsMeta()
@@ -70,27 +63,27 @@ func GetObject() error {
 
 	for _, obj := range objects {
 		log.Printf("%d\t%s\n", obj.ObjectID, obj.Name)
+
 		objURL, err := url.Parse(obj.ObjectLink)
 		if err != nil {
 			log.Printf("failed to parse URL: %s", obj.ObjectLink)
 			continue
 		}
+
 		if len(objURL.Path) == 0 {
 			log.Printf("no URL for object: %d", obj.ObjectID)
 			continue
 		}
 
 		result, err := httpClient.Transport.Submit(&runtime.ClientOperation{
-			ID:                 "getObject",
-			Method:             "GET",
-			PathPattern:        objURL.Path,
-			// ProducesMediaTypes: []string{"text/xml"},
-			// ConsumesMediaTypes: []string{"text/xml"},
-			Schemes:            []string{"https"},
-			Params:             objectParams,
-			Reader:             &object.GetObjectReader{},
-			Context:            objectParams.Context,
-			Client:             objectParams.HTTPClient,
+			ID:          "getObject",
+			Method:      "GET",
+			PathPattern: objURL.Path,
+			Schemes:     []string{"https"},
+			Params:      objectParams,
+			Reader:      &object.GetObjectReader{},
+			Context:     objectParams.Context,
+			Client:      objectParams.HTTPClient,
 		})
 		if err != nil {
 			log.Fatal(err)
@@ -105,7 +98,8 @@ func GetObject() error {
 		for _, res := range objResp.Payload.Object.Resources.Item {
 			log.Printf("\t%d\t%s", res.ID, res.Name)
 		}
-		time.Sleep(1)
+
+		time.Sleep(1) // TODO take Throttle parameter from registry
 	}
 
 	return nil

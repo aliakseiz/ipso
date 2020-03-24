@@ -48,12 +48,25 @@ type Resource struct {
 
 // RegistryOptions to configure the registry
 type RegistryOptions struct {
+	Source string
+	Path   string
 }
 
 // Registry holds registry settings
 type Registry struct {
 	Objects []Object
 }
+// TODO implement New() which would accept some flag to indicate the objects caching is required
+//    in order to provide search interface
+
+// TODO implement `Refresh` to update the cached registry
+
+// TODO implement `FindObjectByID`, `FindResourceByID`,`FindObjectByName`, `FindObjectByNameLike`,
+//  `FindResourceByName`,`FindResourceByNameLike`,`FindObjectByDescriptionLike`, `FindResourceByDescriptionLike`
+
+// TODO implement `Throttle` setting to decrease load on OMAs API
+
+// TODO implement registry export/import to/from file
 
 // New creates a new registry, using custom configuration
 func New(cfg *RegistryOptions) *Registry {
@@ -64,10 +77,18 @@ func New(cfg *RegistryOptions) *Registry {
 	return nil // TODO initialize registry
 }
 
+const SOURCE_URL = "URL"
+const SOURCE_FILE = "File"
+
+const DefaultSource = SOURCE_URL
+const DefaultPath = ""
+
 // DefaultRegistryConfig creates a RegistryOptions
 // with the default settings
 func DefaultRegistryConfig() *RegistryOptions {
 	return &RegistryOptions{
 		// TODO fill in
+		Source: DefaultSource,
+		Path:   DefaultPath,
 	}
 }
