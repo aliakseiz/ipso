@@ -1,0 +1,226 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: aliaksei.zhuk@dualinventive.com
+    name: Aliaksei Zhuk
+  description: OMA LwM2M registry service providing interface for objects and resources
+    searching
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: empty
+  title: LwM2M Registry
+  version: 1.0.0
+servers:
+- description: default server
+  url: https://www.openmobilealliance.org
+paths:
+  /Object:
+    get:
+      description: |
+        Returns metadata of of objects.
+        Can be filtered by object ID and version
+      operationId: findObjects
+      parameters:
+      - description: version of object to retrieve
+        explode: true
+        in: query
+        name: ObjectVersion
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: ID of object to retrieve
+        explode: true
+        in: query
+        name: ObjectID
+        required: false
+        schema:
+          format: int32
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Objects'
+          description: objects meta response
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      tags:
+      - Objects
+  /{objectURI}:
+    get:
+      description: get details of a single object
+      externalDocs:
+        description: OpenAPI 3 - Representing XML
+        url: https://swagger.io/docs/specification/data-models/representing-xml/
+      operationId: findObject
+      parameters:
+      - description: version of object to retrieve
+        example: LWM2M_Security-v1_0.xml
+        explode: false
+        in: path
+        name: objectURI
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/LWM2M'
+          description: object response
+        default:
+          content:
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
+      tags:
+      - Object
+components:
+  schemas:
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    Objects:
+      items:
+        $ref: '#/components/schemas/ObjectMeta'
+      type: array
+    ObjectMeta:
+      example:
+        URN: URN
+        Ver: Ver
+        Owner: Owner
+        ObjectLinkVisible: ObjectLinkVisible
+        Description: Description
+        ObjectID: 0
+        VortoLink: VortoLink
+        Label: Label
+        SpecLink: SpecLink
+        SpecLinkVisible: SpecLinkVisible
+        ObjectLink: ObjectLink
+        Name: Name
+      properties:
+        ObjectID:
+          type: integer
+        Ver:
+          type: string
+        URN:
+          type: string
+        Name:
+          type: string
+        Description:
+          type: string
+        Owner:
+          type: string
+        Label:
+          type: string
+        ObjectLink:
+          type: string
+        ObjectLinkVisible:
+          type: string
+        SpecLink:
+          type: string
+        SpecLinkVisible:
+          type: string
+        VortoLink:
+          type: string
+    LWM2M:
+      properties:
+        Object:
+          $ref: '#/components/schemas/Object'
+      type: object
+    Object:
+      properties:
+        Name:
+          type: string
+        Description1:
+          type: string
+        Description2:
+          type: string
+        ObjectID:
+          type: integer
+        ObjectURN:
+          type: string
+        LWM2MVersion:
+          type: string
+        ObjectVersion:
+          type: string
+        MultipleInstances:
+          $ref: '#/components/schemas/InstanceType'
+        Mandatory:
+          $ref: '#/components/schemas/MandatoryType'
+        Resources:
+          $ref: '#/components/schemas/Object_Resources'
+      type: object
+    Resource:
+      properties:
+        ID:
+          type: integer
+          xml:
+            attribute: true
+        Name:
+          type: string
+        Operations:
+          $ref: '#/components/schemas/OperationType'
+        MultipleInstances:
+          $ref: '#/components/schemas/InstanceType'
+        Mandatory:
+          $ref: '#/components/schemas/MandatoryType'
+        Type:
+          $ref: '#/components/schemas/Type'
+        RangeEnumeration:
+          type: string
+        Units:
+          type: string
+        Description:
+          type: string
+    Type:
+      enum:
+      - String
+      - Boolean
+      - Integer
+      - Float
+      - ObjLink
+      - Opaque
+      type: string
+    OperationType:
+      enum:
+      - R
+      - W
+      - RW
+      - E
+      type: string
+    InstanceType:
+      enum:
+      - Multiple
+      - Single
+      type: string
+    MandatoryType:
+      enum:
+      - Mandatory
+      - Optional
+      type: string
+    Object_Resources:
+      properties:
+        Item:
+          items:
+            $ref: '#/components/schemas/Resource'
+          type: array

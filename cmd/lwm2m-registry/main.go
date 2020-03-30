@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"log"
 	"net/url"
 	"time"
 
+	openapi "github.com/aliakseiz/lwm2m-registry-importer/api/client"
 	"github.com/aliakseiz/lwm2m-registry-importer/rest/client/object"
 	"github.com/aliakseiz/lwm2m-registry-importer/rest/models"
 	"github.com/go-openapi/runtime"
@@ -20,8 +23,19 @@ var (
 
 // TODO implement unit tests
 func main() {
+	objects, err := GetObjectsMetaOpenAPI()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, object := range objects {
+		if err := GetObjectOpenAPI(object); err != nil {
+			log.Print(err)
+		}
+	}
+
 	// Get all objects meta
-	objects, err := GetObjectsMeta()
+	/*objects, err := GetObjectsMeta()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,7 +45,7 @@ func main() {
 	err = GetObject()
 	if err != nil {
 		log.Fatal(err)
-	}
+	}*/
 }
 
 // GetObjectsMeta retrieve all objects meta
@@ -46,6 +60,19 @@ func GetObjectsMeta() (models.Objects, error) {
 		return nil, err
 	}
 	return objects.Payload, nil
+}
+
+func GetObjectsMetaOpenAPI() ([]openapi.ObjectMeta, error) {
+	cfg := openapi.NewConfiguration()
+	cfg.BasePath += "/api/lwm2m/v1/"
+	client := openapi.NewAPIClient(cfg)
+
+	objects, _, err := client.ObjectsApi.FindObjects(context.Background(), &openapi.FindObjectsOpts{})
+	if err != nil {
+		return nil, err
+	}
+
+	return objects, nil
 }
 
 // GetObject retrieve single object
@@ -100,6 +127,36 @@ func GetObject() error {
 		}
 
 		time.Sleep(1) // TODO take Throttle parameter from registry
+	}
+
+	return nil
+}
+
+func GetObjectOpenAPI(objectMeta openapi.ObjectMeta) error {
+	cfg := openapi.NewConfiguration()
+	// cfg.BasePath += "/tech/profiles/"
+	client := openapi.NewAPIClient(cfg)
+
+	objURL, err := url.Parse(objectMeta.ObjectLink)
+	if err != nil {
+		log.Printf("failed to parse URL: %s", objectMeta.ObjectLink)
+		return err
+	}
+	if objURL.Path == "" {
+		log.Printf("empty URL: %s", objectMeta.ObjectLink)
+		return errors.New("empty object description URL")
+	}
+
+	log.Printf("%d\t%s\n", objectMeta.ObjectID, objectMeta.Name)
+
+	path := objURL.Path[1:]
+	object, resp, err := client.ObjectApi.FindObject(context.Background(), path)
+	if err != nil {
+		return err
+	}
+	_ = resp
+	for _, res := range object.Object.Resources.Item {
+		log.Printf("\t%d\t%s", res.ID, res.Name)
 	}
 
 	return nil
