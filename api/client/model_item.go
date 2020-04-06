@@ -11,12 +11,12 @@
 package openapi
 // Item struct for Item
 type Item struct {
-	Name string `json:"Name,omitempty"`
-	Operations OperationType `json:"Operations,omitempty"`
-	MultipleInstances InstanceType `json:"MultipleInstances,omitempty"`
-	Mandatory MandatoryType `json:"Mandatory,omitempty"`
-	Type Type `json:"Type,omitempty"`
-	RangeEnumeration string `json:"RangeEnumeration,omitempty"`
-	Units string `json:"Units,omitempty"`
-	Description string `json:"Description,omitempty"`
+	Name              string        `json:"Name,omitempty"`
+	Operations        OperationType `json:"Operations,omitempty"`
+	MultipleInstances InstanceType  `json:"MultipleInstances,omitempty"`
+	Mandatory         MandatoryType `json:"Mandatory,omitempty"`
+	Type              Type          `json:"Type,omitempty"`
+	RangeEnumeration  string        `json:"RangeEnumeration,omitempty"`
+	Units             string        `json:"Units,omitempty"`
+	Description       string        `json:"Description,omitempty"`
 }
