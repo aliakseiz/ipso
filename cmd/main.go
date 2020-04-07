@@ -8,10 +8,28 @@ import (
 
 // TODO implement unit tests
 func main() {
-	r := registry.New(registry.DefaultConfiguration())
-	err := r.Save("registry.yaml")
+	reg, err := registry.New(registry.DefaultConfiguration())
 	if err != nil {
 		panic(err)
 	}
-	log.Printf("loaded")
+
+	if err = reg.Export("registry.yaml"); err != nil {
+		panic(err)
+	}
+
+	cfg := &registry.Configuration{
+		InitOnNew:      false,
+		SkipInitErrors: false,
+	}
+
+	reg2, err := registry.New(cfg)
+	if err != nil {
+		panic(err)
+	}
+
+	if err = reg2.Import("registry.yaml"); err != nil {
+		panic(err)
+	}
+
+	log.Printf("")
 }

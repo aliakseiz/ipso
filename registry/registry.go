@@ -3,11 +3,14 @@ package registry
 import (
 	"context"
 	"errors"
+	"io/ioutil"
 	"net/url"
 
 	openapi "github.com/aliakseiz/lwm2m-registry/api/client"
 
 	"github.com/antihax/optional"
+
+	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -16,81 +19,77 @@ const (
 )
 
 var (
-	errNotSupportedSourceType = errors.New("not supported source type")
-	errEmptyObjectURL         = errors.New("empty object description URL")
+	errEmptyObjectURL = errors.New("empty object description URL")
+	errEmptyFilename  = errors.New("filename is empty")
 )
 
-// Registry holds objects and settings
+// Registry holds objects and settings.
 type Registry struct {
 	Config *Configuration
 
 	Objects []Object
-
-	state            State
-	stateDescription string
 }
 
 // TODO implement `FindObjectByID`, `FindResourceByID`,`FindObjectByName`, `FindResourceByName`,
 //  `FindObjectByDescription`, `FindResourceByDescription`
 
-// TODO implement registry export/import to/from file
-
-// New creates a new registry, using provided or default configuration
-func New(cfg *Configuration) *Registry {
+// New creates a new registry, using provided or default configuration.
+func New(cfg *Configuration) (*Registry, error) {
 	var err error
 
 	reg := &Registry{
-		Config:           cfg,
-		Objects:          nil,
-		state:            StateNotInitialized,
-		stateDescription: "",
+		Config:  cfg,
+		Objects: nil,
 	}
 
 	if reg.Config == nil {
 		reg.Config = DefaultConfiguration()
 	}
 
-	if cfg.InitOnNew {
-		// TODO initialize registry
-		err = reg.Load()
+	if reg.Config.InitOnNew {
+		reg.Objects, err = reg.ImportFromAPI()
 		if err != nil {
-			reg.state = StateNotInitialized
-			reg.stateDescription = err.Error()
-		} else {
-			reg.state = StateInitialized
+			return nil, err
 		}
 	}
 
-	return reg
+	return reg, nil
 }
 
-// Load loads objects and resources from configured source
-func (r *Registry) Load() (err error) {
-	switch r.Config.Source {
-	case SourceTypeAPI:
-		r.Objects, err = r.loadFromAPI()
-	case SourceTypeFile:
-		// TODO
-	default:
-		return errNotSupportedSourceType
+// Export stores registry objects and resources in a specified file in YAML format.
+func (r *Registry) Export(filename string) error {
+	if filename == "" {
+		return errEmptyFilename
 	}
 
-	return
+	data, err := yaml.Marshal(&r.Objects)
+	if err != nil {
+		return err
+	}
+
+	return ioutil.WriteFile(filename, data, 0644)
 }
 
-// State returns registry State
-// Mandatory wrapper to protect State field from external changes
-func (r *Registry) State() State {
-	return r.state
+// Import loads objects and resources from file.
+// Overwrites current registry Objects and Resources.
+func (r *Registry) Import(filename string) error {
+	if filename == "" {
+		return errEmptyFilename
+	}
+
+	data, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return err
+	}
+
+	return yaml.Unmarshal(data, &r.Objects)
 }
 
-// StateDescription returns registry StateDescription
-func (r *Registry) StateDescription() string {
-	return r.stateDescription
-}
-
-// LoadFromURL initialize the registry from official OMA API
-func (r *Registry) loadFromAPI() ([]Object, error) {
+// ImportFromAPI initializes the registry from official OMA API.
+// Overwrites current registry Objects and Resources.
+// TODO make import asynchronous, run it in separate go routine
+// TODO block Find and Export operations while importing to avoid inconsistent state
+func (r *Registry) ImportFromAPI() ([]Object, error) {
 	objectsMeta, err := r.getObjectsMeta()
 	if err != nil {
 		return nil, err
@@ -114,7 +113,7 @@ func (r *Registry) loadFromAPI() ([]Object, error) {
 	return objects, nil
 }
 
-// getObjectsMeta retrieve all objects metadata
+// getObjectsMeta retrieve all objects metadata.
 func (r *Registry) getObjectsMeta() ([]openapi.ObjectMeta, error) {
 	cfg := openapi.NewConfiguration()
 	cfg.BasePath += objectsMetaBasePath
@@ -130,7 +129,7 @@ func (r *Registry) getObjectsMeta() ([]openapi.ObjectMeta, error) {
 	return objects, nil
 }
 
-// getObject fetch object details based on metadata
+// getObject fetch object details based on metadata.
 func (r *Registry) getObject(objectMeta openapi.ObjectMeta) (*openapi.Object, error) {
 	cfg := openapi.NewConfiguration()
 	client := openapi.NewAPIClient(cfg)
