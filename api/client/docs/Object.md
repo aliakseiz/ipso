@@ -4,16 +4,16 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Name** | **string** |  | [optional] 
+**Name** | **string** |  | 
 **Description1** | **string** |  | [optional] 
 **Description2** | **string** |  | [optional] 
-**ObjectID** | **int32** |  | [optional] 
+**ObjectID** | **int32** |  | 
 **ObjectURN** | **string** |  | [optional] 
 **LWM2MVersion** | **string** |  | [optional] 
 **ObjectVersion** | **string** |  | [optional] 
-**MultipleInstances** | [**InstanceType**](InstanceType.md) |  | [optional] 
-**Mandatory** | [**MandatoryType**](MandatoryType.md) |  | [optional] 
-**Resources** | [**ObjectResources**](Object_Resources.md) |  | [optional] 
+**MultipleInstances** | [**InstanceType**](InstanceType.md) |  | 
+**Mandatory** | [**MandatoryType**](MandatoryType.md) |  | 
+**Resources** | [**ObjectResources**](Object_Resources.md) |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

@@ -142,6 +142,10 @@ components:
           type: string
         VortoLink:
           type: string
+      required:
+      - Name
+      - ObjectID
+      - ObjectLink
     LWM2M:
       properties:
         Object:
@@ -169,6 +173,12 @@ components:
           $ref: '#/components/schemas/MandatoryType'
         Resources:
           $ref: '#/components/schemas/Object_Resources'
+      required:
+      - Mandatory
+      - MultipleInstances
+      - Name
+      - ObjectID
+      - Resources
       type: object
     Resource:
       properties:
@@ -192,6 +202,13 @@ components:
           type: string
         Description:
           type: string
+      required:
+      - ID
+      - Mandatory
+      - MultipleInstances
+      - Name
+      - Operations
+      - Type
     Type:
       enum:
       - String

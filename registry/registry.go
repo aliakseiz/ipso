@@ -3,7 +3,6 @@ package registry
 import (
 	"context"
 	"errors"
-	"log"
 	"net/url"
 
 	openapi "github.com/aliakseiz/lwm2m-registry/api/client"
@@ -16,56 +15,113 @@ const (
 	objectVersionLatest = "latest"
 )
 
+var (
+	errNotSupportedSourceType = errors.New("not supported source type")
+	errEmptyObjectURL         = errors.New("empty object description URL")
+)
+
 // Registry holds objects and settings
 type Registry struct {
-	// TODO add field to represent current state, if initializing from the web
+	Config *Configuration
+
 	Objects []Object
+
+	state            State
+	stateDescription string
 }
 
 // TODO implement `FindObjectByID`, `FindResourceByID`,`FindObjectByName`, `FindResourceByName`,
 //  `FindObjectByDescription`, `FindResourceByDescription`
 
-// TODO implement `Throttle` setting to decrease load on OMAs API
-
 // TODO implement registry export/import to/from file
 
-// New creates a new registry, using custom configuration
+// New creates a new registry, using provided or default configuration
 func New(cfg *Configuration) *Registry {
-	if cfg == nil {
-		cfg = DefaultConfiguration()
+	var err error
+
+	reg := &Registry{
+		Config:           cfg,
+		Objects:          nil,
+		state:            StateNotInitialized,
+		stateDescription: "",
 	}
 
-	return nil // TODO initialize registry
+	if reg.Config == nil {
+		reg.Config = DefaultConfiguration()
+	}
+
+	if cfg.InitOnNew {
+		// TODO initialize registry
+		err = reg.Load()
+		if err != nil {
+			reg.state = StateNotInitialized
+			reg.stateDescription = err.Error()
+		} else {
+			reg.state = StateInitialized
+		}
+	}
+
+	return reg
 }
 
-// Init initialize the registry
-func (r Registry) Init() error {
-	objectsMeta, err := r.GetObjectsMeta()
-	if err != nil {
-		return err
+// Load loads objects and resources from configured source
+func (r *Registry) Load() (err error) {
+	switch r.Config.Source {
+	case SourceTypeAPI:
+		r.Objects, err = r.loadFromAPI()
+	case SourceTypeFile:
+		// TODO
+	default:
+		return errNotSupportedSourceType
 	}
 
-	var objects []*Object
+	return
+}
+
+// State returns registry State
+// Mandatory wrapper to protect State field from external changes
+func (r *Registry) State() State {
+	return r.state
+}
+
+// StateDescription returns registry StateDescription
+func (r *Registry) StateDescription() string {
+	return r.stateDescription
+}
+
+// LoadFromURL initialize the registry from official OMA API
+func (r *Registry) loadFromAPI() ([]Object, error) {
+	objectsMeta, err := r.getObjectsMeta()
+	if err != nil {
+		return nil, err
+	}
+
+	var objects []Object
 
 	for _, objectMeta := range objectsMeta {
-		object, err := r.GetObject(objectMeta)
-		if err != nil { // TODO add flag to skip init error
-			return err
+		object, err := r.getObject(objectMeta)
+		if err != nil {
+			if r.Config.SkipInitErrors {
+				continue
+			}
+
+			return nil, err
 		}
 
 		objects = append(objects, mapObject(object))
 	}
-	return nil
+
+	return objects, nil
 }
 
-// GetObjectsMeta retrieve all objects metadata
-func (r Registry) GetObjectsMeta() ([]openapi.ObjectMeta, error) {
+// getObjectsMeta retrieve all objects metadata
+func (r *Registry) getObjectsMeta() ([]openapi.ObjectMeta, error) {
 	cfg := openapi.NewConfiguration()
 	cfg.BasePath += objectsMetaBasePath
 	client := openapi.NewAPIClient(cfg)
 
 	objects, _, err := client.ObjectsApi.FindObjects(context.Background(), &openapi.FindObjectsOpts{
-		ObjectVersion: optional.NewString(objectVersionLatest),
+		ObjectVersion: optional.NewString(objectVersionLatest), // TODO allow to choose object version
 	})
 	if err != nil {
 		return nil, err
@@ -74,31 +130,23 @@ func (r Registry) GetObjectsMeta() ([]openapi.ObjectMeta, error) {
 	return objects, nil
 }
 
-// GetObject fetch object details based on metadata
-func (r Registry) GetObject(objectMeta openapi.ObjectMeta) (*openapi.Object, error) {
+// getObject fetch object details based on metadata
+func (r *Registry) getObject(objectMeta openapi.ObjectMeta) (*openapi.Object, error) {
 	cfg := openapi.NewConfiguration()
 	client := openapi.NewAPIClient(cfg)
 
 	objURL, err := url.Parse(objectMeta.ObjectLink)
 	if err != nil {
-		log.Printf("failed to parse URL: %s", objectMeta.ObjectLink)
 		return nil, err
 	}
 
 	if objURL.Path == "" {
-		log.Printf("empty URL: %s", objectMeta.ObjectLink)
-		return nil, errors.New("empty object description URL")
+		return nil, errEmptyObjectURL
 	}
-
-	log.Printf("%d\t%s\n", objectMeta.ObjectID, objectMeta.Name)
 
 	object, _, err := client.ObjectApi.FindObject(context.Background(), objURL.Path[1:]) // 1: - skip leading /
 	if err != nil {
 		return nil, err
-	}
-
-	for _, res := range object.Object.Resources.Item {
-		log.Printf("\t%d\t%s", res.ID, res.Name)
 	}
 
 	return &object.Object, nil

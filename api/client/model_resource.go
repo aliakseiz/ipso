@@ -11,12 +11,12 @@
 package openapi
 // Resource struct for Resource
 type Resource struct {
-	ID int32 `json:"ID,omitempty" xml:"ID,attr"`
-	Name string `json:"Name,omitempty" xml:"Name"`
-	Operations OperationType `json:"Operations,omitempty" xml:"Operations"`
-	MultipleInstances InstanceType `json:"MultipleInstances,omitempty" xml:"MultipleInstances"`
-	Mandatory MandatoryType `json:"Mandatory,omitempty" xml:"Mandatory"`
-	Type Type `json:"Type,omitempty" xml:"Type"`
+	ID int32 `json:"ID" xml:"ID,attr"`
+	Name string `json:"Name" xml:"Name"`
+	Operations OperationType `json:"Operations" xml:"Operations"`
+	MultipleInstances InstanceType `json:"MultipleInstances" xml:"MultipleInstances"`
+	Mandatory MandatoryType `json:"Mandatory" xml:"Mandatory"`
+	Type Type `json:"Type" xml:"Type"`
 	RangeEnumeration string `json:"RangeEnumeration,omitempty" xml:"RangeEnumeration"`
 	Units string `json:"Units,omitempty" xml:"Units"`
 	Description string `json:"Description,omitempty" xml:"Description"`

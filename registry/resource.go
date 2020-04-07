@@ -2,33 +2,32 @@ package registry
 
 import openapi "github.com/aliakseiz/lwm2m-registry/api/client"
 
+// Resource structure represents OMA Resource entity
 type Resource struct {
-	Name             string
-	Operations       OperationType
-	MultipleInstance InstanceType
-	Mandatory        MandatoryType
-	Type             ResourceType
-	RangeEnumeration string
-	Units            string
-	Description      string
+	ID               int32         `yaml:"ID"`
+	Name             string        `yaml:"Name"`
+	Operations       OperationType `yaml:"Operations"`
+	MultipleInstance InstanceType  `yaml:"MultipleInstances"`
+	Mandatory        MandatoryType `yaml:"Mandatory"`
+	Type             ResourceType  `yaml:"Type"`
+	RangeEnumeration string        `yaml:"RangeEnumeration,omitempty"`
+	Units            string        `yaml:"Units,omitempty"`
+	Description      string        `yaml:"Description,omitempty"`
 }
 
-func mapResources(omaResources []openapi.Resource) []*Resource {
-	var resources []*Resource
+func mapResources(omaResources []openapi.Resource) []Resource {
+	resources := make([]Resource, len(omaResources))
 
-	for _, omaRes := range omaResources {
-		if res := mapResource(omaRes); res != nil {
-			resources = append(resources, res)
-		}
-		// TODO log mapping error?
+	for i, omaRes := range omaResources {
+		resources[i] = mapResource(omaRes)
 	}
 
 	return resources
 }
 
-func mapResource(omaResource openapi.Resource) *Resource {
-	// TODO validate omaResource, return nil or error
-	return &Resource{
+func mapResource(omaResource openapi.Resource) Resource {
+	return Resource{
+		ID:               omaResource.ID,
 		Name:             omaResource.Name,
 		Operations:       OperationType(omaResource.Operations),
 		MultipleInstance: InstanceType(omaResource.MultipleInstances),

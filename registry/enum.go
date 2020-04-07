@@ -1,5 +1,32 @@
 package registry
 
+// SourceType constants
+const (
+	SourceTypeAPI  SourceType = "API"
+	SourceTypeFile SourceType = "File"
+)
+
+type SourceType string
+
+// String for SourceType
+func (e SourceType) String() string {
+	return string(e)
+}
+
+// State constants
+const (
+	StateNotInitialized State = "Not initialized"
+	StateInitializing   State = "Initializing"
+	StateInitialized    State = "Initialized"
+)
+
+type State string
+
+// String for State
+func (e State) String() string {
+	return string(e)
+}
+
 // InstanceType constants
 const (
 	InstanceTypeSingle   InstanceType = "Single"

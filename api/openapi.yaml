@@ -22,11 +22,11 @@ paths:
         Returns metadata of of objects.
         Can be filtered by object ID and version
       operationId: findObjects
-# TODO uncomment the servers sections below, when `Path and operation-level servers are not displayed`
-#   from this issue is implemented: https://github.com/swagger-api/swagger-ui/issues/3641
-#      servers:
-#        - url: https://www.openmobilealliance.org/api/lwm2m/v1/
-#          description: Objects Meta API
+      # TODO uncomment the servers sections below, when `Path and operation-level servers are not displayed`
+      #   from this issue is implemented: https://github.com/swagger-api/swagger-ui/issues/3641
+      #      servers:
+      #        - url: https://www.openmobilealliance.org/api/lwm2m/v1/
+      #          description: Objects Meta API
       parameters:
         - name: ObjectVersion
           in: query
@@ -64,9 +64,9 @@ paths:
       externalDocs:
         url: https://swagger.io/docs/specification/data-models/representing-xml/
         description: OpenAPI 3 - Representing XML
-#      servers:
-#        - url: https://www.openmobilealliance.org/tech/profiles/
-#          description: single object XML with details
+      #      servers:
+      #        - url: https://www.openmobilealliance.org/tech/profiles/
+      #          description: single object XML with details
       parameters:
         - name: objectURI
           in: path
@@ -110,6 +110,10 @@ components:
 
 
     ObjectMeta:
+      required:
+        - ObjectID
+        - Name
+        - ObjectLink
       properties:
         ObjectID:
           type: integer
@@ -144,6 +148,12 @@ components:
 
     Object:
       type: object
+      required:
+        - ObjectID
+        - Name
+        - MultipleInstances
+        - Mandatory
+        - Resources
       properties:
         Name:
           type: string
@@ -172,6 +182,13 @@ components:
                 $ref: '#/components/schemas/Resource'
 
     Resource:
+      required:
+        - ID
+        - Name
+        - Operations
+        - MultipleInstances
+        - Mandatory
+        - Type
       properties:
         ID:
           type: integer

@@ -4,12 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ID** | **int32** |  | [optional] 
-**Name** | **string** |  | [optional] 
-**Operations** | [**OperationType**](OperationType.md) |  | [optional] 
-**MultipleInstances** | [**InstanceType**](InstanceType.md) |  | [optional] 
-**Mandatory** | [**MandatoryType**](MandatoryType.md) |  | [optional] 
-**Type** | [**Type**](Type.md) |  | [optional] 
+**ID** | **int32** |  | 
+**Name** | **string** |  | 
+**Operations** | [**OperationType**](OperationType.md) |  | 
+**MultipleInstances** | [**InstanceType**](InstanceType.md) |  | 
+**Mandatory** | [**MandatoryType**](MandatoryType.md) |  | 
+**Type** | [**Type**](Type.md) |  | 
 **RangeEnumeration** | **string** |  | [optional] 
 **Units** | **string** |  | [optional] 
 **Description** | **string** |  | [optional] 
