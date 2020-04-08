@@ -12,12 +12,12 @@ import (
 
 const (
 	objectsMetaBasePath = "/api/lwm2m/v1/"
-	objectVersionLatest = "latest"
 )
 
 var (
 	errEmptyObjectURL = errors.New("empty object description URL")
 	errEmptyFilename  = errors.New("filename is empty")
+	errObjNotFound    = errors.New("object not found")
 )
 
 // Registry holds objects and settings.
@@ -26,6 +26,12 @@ type Registry struct {
 
 	Objects []Object
 }
+
+// Registry interface
+// Export
+// Import
+// ImportFromAPI
+// Compare
 
 // TODO implement `FindObjectByID`, `FindResourceByID`,`FindObjectByName`, `FindResourceByName`,
 //  `FindObjectByDescription`, `FindResourceByDescription`
@@ -108,6 +114,72 @@ func (r *Registry) ImportFromAPI() ([]Object, error) {
 	}
 
 	return objects, nil
+}
+
+// Compare makes comparison of r and reg registries.
+// Returns a list of non-equal objects with difference explanation.
+func (r *Registry) Compare(reg *Registry) []*ObjectComparison {
+	// TODO store objects in registry in maps to improve lookup performance
+	var objComp []*ObjectComparison
+
+	// Compare r with reg
+	for _, regObj := range reg.Objects {
+		if rObj, err := r.Find(&regObj); err != nil {
+			regObjCopy := regObj
+			// rObjCopy := rObj
+
+			switch err {
+			case errObjNotFound:
+				objComp = append(objComp, &ObjectComparison{
+					Difference: DifferenceTypeNewObject,
+					Object:     nil,
+					ObjectComp: &regObjCopy,
+				})
+			default:
+				objComp = append(objComp, &ObjectComparison{
+					Difference: DifferenceTypeUnknown,
+					Object:     rObj,
+					ObjectComp: &regObjCopy,
+				})
+			}
+		}
+	}
+
+	// Compare reg with r
+	for _, rObj := range r.Objects {
+		if regObj, err := reg.Find(&rObj); err != nil {
+			// regObjCopy := regObj
+			rObjCopy := rObj
+
+			switch err {
+			case errObjNotFound:
+				objComp = append(objComp, &ObjectComparison{
+					Difference: DifferenceTypeObjectRemoved,
+					Object:     &rObjCopy,
+					ObjectComp: nil,
+				})
+			default:
+				objComp = append(objComp, &ObjectComparison{
+					Difference: DifferenceTypeUnknown,
+					Object:     &rObjCopy,
+					ObjectComp: regObj,
+				})
+			}
+		}
+	}
+
+	return objComp
+}
+
+// Find looks for an object in current registry.
+func (r *Registry) Find(o *Object) (*Object, error) {
+	for _, rObj := range r.Objects {
+		if rObj.ObjectID == o.ObjectID && rObj.ObjectVersion == o.ObjectVersion {
+			return &rObj, nil
+		}
+	}
+
+	return nil, errObjNotFound
 }
 
 // getObjectsMeta retrieve all objects metadata.

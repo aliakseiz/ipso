@@ -61,3 +61,18 @@ type ResourceType string
 func (e ResourceType) String() string {
 	return string(e)
 }
+
+// DifferenceType constants
+const (
+	DifferenceTypeUnknown       DifferenceType = "Unknown reason"
+	DifferenceTypeNewObject     DifferenceType = "New object added"
+	DifferenceTypeObjectRemoved DifferenceType = "Object was removed"
+)
+
+// DifferenceType represents the objects difference explanation
+type DifferenceType string
+
+// String for ResourceType
+func (e DifferenceType) String() string {
+	return string(e)
+}

@@ -2,6 +2,7 @@ package registry
 
 import openapi "github.com/aliakseiz/lwm2m-registry/api/client"
 
+// Object structure represents OMA Object entity
 type Object struct {
 	Name             string        `yaml:"Name"`
 	Description1     string        `yaml:"Description1,omitempty"`
@@ -13,6 +14,13 @@ type Object struct {
 	MultipleInstance InstanceType  `yaml:"MultipleInstances"`
 	Mandatory        MandatoryType `yaml:"Mandatory"`
 	Resources        []Resource    `yaml:"Resources"`
+}
+
+// ObjectComparison contains details of two objects comparison
+type ObjectComparison struct {
+	Difference DifferenceType
+	Object     *Object // object in existing registry
+	ObjectComp *Object // object in compared registry, which is passed as parameter to Compare function
 }
 
 func mapObject(omaObject *openapi.Object) Object {
