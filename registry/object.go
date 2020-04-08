@@ -22,6 +22,8 @@ func mapObject(omaObject *openapi.Object) Object {
 		Description2:     omaObject.Description2,
 		ObjectID:         omaObject.ObjectID,
 		ObjectURN:        omaObject.ObjectURN,
+		LwM2MVersion:     omaObject.LWM2MVersion,
+		ObjectVersion:    omaObject.ObjectVersion,
 		MultipleInstance: InstanceType(omaObject.MultipleInstances),
 		Mandatory:        MandatoryType(omaObject.Mandatory),
 		Resources:        mapResources(omaObject.Resources.Item),

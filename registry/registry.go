@@ -7,9 +7,6 @@ import (
 	"net/url"
 
 	openapi "github.com/aliakseiz/lwm2m-registry/api/client"
-
-	"github.com/antihax/optional"
-
 	"gopkg.in/yaml.v2"
 )
 
@@ -119,9 +116,10 @@ func (r *Registry) getObjectsMeta() ([]openapi.ObjectMeta, error) {
 	cfg.BasePath += objectsMetaBasePath
 	client := openapi.NewAPIClient(cfg)
 
-	objects, _, err := client.ObjectsApi.FindObjects(context.Background(), &openapi.FindObjectsOpts{
-		ObjectVersion: optional.NewString(objectVersionLatest), // TODO allow to choose object version
-	})
+	// TODO allow to choose object version
+	// ObjectVersion: optional.NewString(objectVersionLatest)
+
+	objects, _, err := client.ObjectsApi.FindObjects(context.Background(), &openapi.FindObjectsOpts{})
 	if err != nil {
 		return nil, err
 	}
