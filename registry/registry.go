@@ -1,3 +1,4 @@
+// Package registry provides methods to create and control OMA IPSO registry.
 package registry
 
 import (

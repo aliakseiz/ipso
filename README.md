@@ -61,7 +61,7 @@ Client with XML tags:
 
 [Stability-Status-Image]: http://badges.github.io/stability-badges/dist/experimental.svg
 
-[Godoc-Url]: https://godoc.org/github.com/aliakseiz/lwm2m-registry
+[Godoc-Url]: https://pkg.go.dev/mod/github.com/aliakseiz/lwm2m-registry
 [Godoc-Image]: https://godoc.org/github.com/aliakseiz/lwm2m-registry?status.svg
 
 [ReportCard-Url]: https://goreportcard.com/report/github.com/aliakseiz/lwm2m-registry
