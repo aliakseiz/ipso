@@ -6,28 +6,27 @@ import (
 	"github.com/aliakseiz/lwm2m-registry/registry"
 )
 
-// TODO implement unit tests
 func main() {
-	// reg, err := registry.New(registry.DefaultConfiguration())
-	// if err != nil {
-	// 	panic(err)
-	// }
+	regAPI, err := registry.New(registry.DefaultConfiguration())
+	if err != nil {
+		panic(err)
+	}
 
-	// if err = reg.Export("registry.yaml"); err != nil {
-	// 	panic(err)
-	// }
+	if err = regAPI.Export("registry.yaml"); err != nil {
+		panic(err)
+	}
 
 	cfg := &registry.Configuration{
 		InitOnNew:      false,
 		SkipInitErrors: false,
 	}
 
-	reg, err := registry.New(cfg)
+	reg1, err := registry.New(cfg)
 	if err != nil {
 		panic(err)
 	}
 
-	if err = reg.Import("registry.yaml"); err != nil {
+	if err = reg1.Import("registry.yaml"); err != nil {
 		panic(err)
 	}
 
@@ -40,7 +39,7 @@ func main() {
 		panic(err)
 	}
 
-	objComp := reg.Compare(reg2)
+	objComp := reg1.Compare(reg2)
 
 	log.Printf("objComp length: %d", len(objComp))
 }
