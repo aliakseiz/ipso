@@ -9,6 +9,7 @@
  */
 
 package openapi
+
 // Item struct for Item
 type Item struct {
 	Name              string        `json:"Name,omitempty"`

@@ -9,11 +9,12 @@
  */
 
 package openapi
+
 // InstanceType the model 'InstanceType'
 type InstanceType string
 
 // List of InstanceType
 const (
 	MULTIPLE InstanceType = "Multiple"
-	SINGLE InstanceType = "Single"
+	SINGLE   InstanceType = "Single"
 )

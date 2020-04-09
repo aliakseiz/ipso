@@ -9,8 +9,9 @@
  */
 
 package openapi
+
 // Error struct for Error
 type Error struct {
-	Code int32 `json:"code" xml:"code"`
+	Code    int32  `json:"code" xml:"code"`
 	Message string `json:"message" xml:"message"`
 }
