@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	openapi "github.com/aliakseiz/lwm2m-registry/api/client"
+	openapi "github.com/aliakseiz/ipso-registry/api/client"
 )
 
 func Test_mapObject(t *testing.T) {

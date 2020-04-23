@@ -1,7 +1,7 @@
 /*
- * LwM2M Registry
+ * IPSO Registry
  *
- * OMA LwM2M registry service providing interface for objects and resources searching
+ * OMA IPSO registry service providing interface for objects and resources searching
  *
  * API version: 1.0.0
  * Contact: aliaksei.zhuk@dualinventive.com
@@ -9,12 +9,11 @@
  */
 
 package openapi
-
 // InstanceType the model 'InstanceType'
 type InstanceType string
 
 // List of InstanceType
 const (
 	MULTIPLE InstanceType = "Multiple"
-	SINGLE   InstanceType = "Single"
+	SINGLE InstanceType = "Single"
 )

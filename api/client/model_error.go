@@ -1,7 +1,7 @@
 /*
- * LwM2M Registry
+ * IPSO Registry
  *
- * OMA LwM2M registry service providing interface for objects and resources searching
+ * OMA IPSO registry service providing interface for objects and resources searching
  *
  * API version: 1.0.0
  * Contact: aliaksei.zhuk@dualinventive.com
@@ -9,9 +9,8 @@
  */
 
 package openapi
-
 // Error struct for Error
 type Error struct {
-	Code    int32  `json:"code" xml:"code"`
+	Code int32 `json:"code" xml:"code"`
 	Message string `json:"message" xml:"message"`
 }

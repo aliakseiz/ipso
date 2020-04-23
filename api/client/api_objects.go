@@ -1,7 +1,7 @@
 /*
- * LwM2M Registry
+ * IPSO Registry
  *
- * OMA LwM2M registry service providing interface for objects and resources searching
+ * OMA IPSO registry service providing interface for objects and resources searching
  *
  * API version: 1.0.0
  * Contact: aliaksei.zhuk@dualinventive.com
@@ -12,10 +12,10 @@ package openapi
 
 import (
 	_context "context"
-	"github.com/antihax/optional"
 	_ioutil "io/ioutil"
 	_nethttp "net/http"
 	_neturl "net/url"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -28,13 +28,13 @@ type ObjectsApiService service
 
 // FindObjectsOpts Optional parameters for the method 'FindObjects'
 type FindObjectsOpts struct {
-	ObjectVersion optional.String
-	ObjectID      optional.Int32
+    ObjectVersion optional.String
+    ObjectID optional.Int32
 }
 
 /*
 FindObjects Method for FindObjects
-Returns metadata of of objects. Can be filtered by object ID and version
+Returns metadata of of objects. Can be filtered by object ID and version 
  * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param optional nil or *FindObjectsOpts - Optional Parameters:
  * @param "ObjectVersion" (optional.String) -  version of object to retrieve
@@ -111,13 +111,13 @@ func (a *ObjectsApiService) FindObjects(ctx _context.Context, localVarOptionals 
 			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
-		var v Error
-		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-		if err != nil {
-			newErr.error = err.Error()
-			return localVarReturnValue, localVarHTTPResponse, newErr
-		}
-		newErr.model = v
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

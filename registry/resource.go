@@ -1,6 +1,6 @@
 package registry
 
-import openapi "github.com/aliakseiz/lwm2m-registry/api/client"
+import openapi "github.com/aliakseiz/ipso-registry/api/client"
 
 // Resource structure represents OMA Resource entity
 type Resource struct {

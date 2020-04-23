@@ -1,4 +1,4 @@
-# LwM2M registry
+# IPSO registry
 
 [![License][License-Image]][License-Url]
 [![Godoc][Godoc-Image]][Godoc-Url]
@@ -61,8 +61,8 @@ Client with XML tags:
 
 [Stability-Status-Image]: http://badges.github.io/stability-badges/dist/experimental.svg
 
-[Godoc-Url]: https://pkg.go.dev/mod/github.com/aliakseiz/lwm2m-registry
-[Godoc-Image]: https://godoc.org/github.com/aliakseiz/lwm2m-registry?status.svg
+[Godoc-Url]: https://pkg.go.dev/mod/github.com/aliakseiz/ipso-registry
+[Godoc-Image]: https://godoc.org/github.com/aliakseiz/ipso-registry?status.svg
 
-[ReportCard-Url]: https://goreportcard.com/report/github.com/aliakseiz/lwm2m-registry
-[ReportCard-Image]: https://goreportcard.com/badge/github.com/aliakseiz/lwm2m-registry
+[ReportCard-Url]: https://goreportcard.com/report/github.com/aliakseiz/ipso-registry
+[ReportCard-Image]: https://goreportcard.com/badge/github.com/aliakseiz/ipso-registry

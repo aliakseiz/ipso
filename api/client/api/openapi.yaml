@@ -3,13 +3,13 @@ info:
   contact:
     email: aliaksei.zhuk@dualinventive.com
     name: Aliaksei Zhuk
-  description: OMA LwM2M registry service providing interface for objects and resources
+  description: OMA IPSO registry service providing interface for objects and resources
     searching
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: empty
-  title: LwM2M Registry
+  title: IPSO Registry
   version: 1.0.0
 servers:
 - description: default server

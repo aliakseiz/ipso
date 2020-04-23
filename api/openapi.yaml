@@ -1,8 +1,8 @@
 openapi: "3.0.0"
 info:
   version: 1.0.0
-  title: LwM2M Registry
-  description: OMA LwM2M registry service providing interface for objects and resources searching
+  title: IPSO Registry
+  description: OMA IPSO registry service providing interface for objects and resources searching
   termsOfService: empty
   contact:
     name: Aliaksei Zhuk

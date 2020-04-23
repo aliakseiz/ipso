@@ -1,7 +1,7 @@
 /*
- * LwM2M Registry
+ * IPSO Registry
  *
- * OMA LwM2M registry service providing interface for objects and resources searching
+ * OMA IPSO registry service providing interface for objects and resources searching
  *
  * API version: 1.0.0
  * Contact: aliaksei.zhuk@dualinventive.com
@@ -40,7 +40,7 @@ var (
 	xmlCheck  = regexp.MustCompile(`(?i:(?:application|text)/xml)`)
 )
 
-// APIClient manages communication with the LwM2M Registry API v1.0.0
+// APIClient manages communication with the IPSO Registry API v1.0.0
 // In most cases there should be only one, shared, APIClient.
 type APIClient struct {
 	cfg    *Configuration
@@ -160,12 +160,13 @@ func parameterToJson(obj interface{}) (string, error) {
 	return string(jsonBuf), err
 }
 
+
 // callAPI do the request.
 func (c *APIClient) callAPI(request *http.Request) (*http.Response, error) {
 	if c.cfg.Debug {
-		dump, err := httputil.DumpRequestOut(request, true)
+	        dump, err := httputil.DumpRequestOut(request, true)
 		if err != nil {
-			return nil, err
+		        return nil, err
 		}
 		log.Printf("\n%s\n", string(dump))
 	}

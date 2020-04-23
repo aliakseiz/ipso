@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/url"
 
-	openapi "github.com/aliakseiz/lwm2m-registry/api/client"
+	openapi "github.com/aliakseiz/ipso-registry/api/client"
 	"gopkg.in/yaml.v2"
 )
 

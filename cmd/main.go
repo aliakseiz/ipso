@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/aliakseiz/lwm2m-registry/registry"
+	"github.com/aliakseiz/ipso-registry/registry"
 )
 
 func main() {

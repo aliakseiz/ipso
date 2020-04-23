@@ -1,7 +1,7 @@
 /*
- * LwM2M Registry
+ * IPSO Registry
  *
- * OMA LwM2M registry service providing interface for objects and resources searching
+ * OMA IPSO registry service providing interface for objects and resources searching
  *
  * API version: 1.0.0
  * Contact: aliaksei.zhuk@dualinventive.com
@@ -9,14 +9,13 @@
  */
 
 package openapi
-
 // OperationType the model 'OperationType'
 type OperationType string
 
 // List of OperationType
 const (
-	R  OperationType = "R"
-	W  OperationType = "W"
+	R OperationType = "R"
+	W OperationType = "W"
 	RW OperationType = "RW"
-	E  OperationType = "E"
+	E OperationType = "E"
 )

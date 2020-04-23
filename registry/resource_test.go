@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/aliakseiz/lwm2m-registry/api/client"
+	"github.com/aliakseiz/ipso-registry/api/client"
 )
 
 func Test_mapResource(t *testing.T) {

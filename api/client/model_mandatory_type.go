@@ -1,7 +1,7 @@
 /*
- * LwM2M Registry
+ * IPSO Registry
  *
- * OMA LwM2M registry service providing interface for objects and resources searching
+ * OMA IPSO registry service providing interface for objects and resources searching
  *
  * API version: 1.0.0
  * Contact: aliaksei.zhuk@dualinventive.com
@@ -9,12 +9,11 @@
  */
 
 package openapi
-
 // MandatoryType the model 'MandatoryType'
 type MandatoryType string
 
 // List of MandatoryType
 const (
 	MANDATORY MandatoryType = "Mandatory"
-	OPTIONAL  MandatoryType = "Optional"
+	OPTIONAL MandatoryType = "Optional"
 )

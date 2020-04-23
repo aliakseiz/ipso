@@ -1,7 +1,7 @@
 /*
- * LwM2M Registry
+ * IPSO Registry
  *
- * OMA LwM2M registry service providing interface for objects and resources searching
+ * OMA IPSO registry service providing interface for objects and resources searching
  *
  * API version: 1.0.0
  * Contact: aliaksei.zhuk@dualinventive.com
@@ -9,16 +9,15 @@
  */
 
 package openapi
-
 // Resource struct for Resource
 type Resource struct {
-	ID                int32         `json:"ID" xml:"ID,attr"`
-	Name              string        `json:"Name" xml:"Name"`
-	Operations        OperationType `json:"Operations" xml:"Operations"`
-	MultipleInstances InstanceType  `json:"MultipleInstances" xml:"MultipleInstances"`
-	Mandatory         MandatoryType `json:"Mandatory" xml:"Mandatory"`
-	Type              Type          `json:"Type" xml:"Type"`
-	RangeEnumeration  string        `json:"RangeEnumeration,omitempty" xml:"RangeEnumeration"`
-	Units             string        `json:"Units,omitempty" xml:"Units"`
-	Description       string        `json:"Description,omitempty" xml:"Description"`
+	ID int32 `json:"ID" xml:"ID,attr"`
+	Name string `json:"Name" xml:"Name"`
+	Operations OperationType `json:"Operations" xml:"Operations"`
+	MultipleInstances InstanceType `json:"MultipleInstances" xml:"MultipleInstances"`
+	Mandatory MandatoryType `json:"Mandatory" xml:"Mandatory"`
+	Type Type `json:"Type" xml:"Type"`
+	RangeEnumeration string `json:"RangeEnumeration,omitempty" xml:"RangeEnumeration"`
+	Units string `json:"Units,omitempty" xml:"Units"`
+	Description string `json:"Description,omitempty" xml:"Description"`
 }
