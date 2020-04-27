@@ -9,15 +9,16 @@
  */
 
 package openapi
+
 // Type the model 'Type'
 type Type string
 
 // List of Type
 const (
-	STRING Type = "String"
-	BOOLEAN Type = "Boolean"
-	INTEGER Type = "Integer"
-	FLOAT Type = "Float"
+	STRING   Type = "String"
+	BOOLEAN  Type = "Boolean"
+	INTEGER  Type = "Integer"
+	FLOAT    Type = "Float"
 	OBJ_LINK Type = "ObjLink"
-	OPAQUE Type = "Opaque"
+	OPAQUE   Type = "Opaque"
 )

@@ -9,6 +9,7 @@
  */
 
 package openapi
+
 // Lwm2M struct for Lwm2M
 type Lwm2M struct {
 	Object Object `json:"Object,omitempty" xml:"Object"`

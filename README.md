@@ -28,6 +28,8 @@ Create registry with custom configuration:
 cfg := &registry.Configuration{
     InitOnNew:      false,
     SkipInitErrors: false,
+    Sanitize: false,
+    Sanitizer: nil,
 }
 
 reg, err := registry.New(cfg)
@@ -36,6 +38,11 @@ reg, err := registry.New(cfg)
 Compare two registries:
 ```go
 comp := reg1.Compare(reg2)
+```
+Remove unwanted strings from objects and resources description:
+```go
+reg.Config.Sanitizer = registry.DefaultSanitizer()
+reg.Sanitize()
 ```
 
 ---

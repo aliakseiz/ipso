@@ -135,3 +135,34 @@ func TestResourceType_String(t *testing.T) {
 		})
 	}
 }
+
+func TestDifferenceType_String(t *testing.T) {
+	tests := []struct {
+		name string
+		e    DifferenceType
+		want string
+	}{
+		{
+			name: "Object added",
+			e:    DifferenceTypeNewObject,
+			want: "New object added",
+		},
+		{
+			name: "Object removed",
+			e:    DifferenceTypeObjectRemoved,
+			want: "Object was removed",
+		},
+		{
+			name: "Unknown difference type",
+			e:    DifferenceTypeUnknown,
+			want: "Unknown reason",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.e.String(); got != tt.want {
+				t.Errorf("String() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

@@ -9,11 +9,12 @@
  */
 
 package openapi
+
 // MandatoryType the model 'MandatoryType'
 type MandatoryType string
 
 // List of MandatoryType
 const (
 	MANDATORY MandatoryType = "Mandatory"
-	OPTIONAL MandatoryType = "Optional"
+	OPTIONAL  MandatoryType = "Optional"
 )

@@ -9,18 +9,19 @@
  */
 
 package openapi
+
 // ObjectMeta struct for ObjectMeta
 type ObjectMeta struct {
-	ObjectID int32 `json:"ObjectID" xml:"ObjectID"`
-	Ver string `json:"Ver,omitempty" xml:"Ver"`
-	URN string `json:"URN,omitempty" xml:"URN"`
-	Name string `json:"Name" xml:"Name"`
-	Description string `json:"Description,omitempty" xml:"Description"`
-	Owner string `json:"Owner,omitempty" xml:"Owner"`
-	Label string `json:"Label,omitempty" xml:"Label"`
-	ObjectLink string `json:"ObjectLink" xml:"ObjectLink"`
+	ObjectID          int32  `json:"ObjectID" xml:"ObjectID"`
+	Ver               string `json:"Ver,omitempty" xml:"Ver"`
+	URN               string `json:"URN,omitempty" xml:"URN"`
+	Name              string `json:"Name" xml:"Name"`
+	Description       string `json:"Description,omitempty" xml:"Description"`
+	Owner             string `json:"Owner,omitempty" xml:"Owner"`
+	Label             string `json:"Label,omitempty" xml:"Label"`
+	ObjectLink        string `json:"ObjectLink" xml:"ObjectLink"`
 	ObjectLinkVisible string `json:"ObjectLinkVisible,omitempty" xml:"ObjectLinkVisible"`
-	SpecLink string `json:"SpecLink,omitempty" xml:"SpecLink"`
-	SpecLinkVisible string `json:"SpecLinkVisible,omitempty" xml:"SpecLinkVisible"`
-	VortoLink string `json:"VortoLink,omitempty" xml:"VortoLink"`
+	SpecLink          string `json:"SpecLink,omitempty" xml:"SpecLink"`
+	SpecLinkVisible   string `json:"SpecLinkVisible,omitempty" xml:"SpecLinkVisible"`
+	VortoLink         string `json:"VortoLink,omitempty" xml:"VortoLink"`
 }

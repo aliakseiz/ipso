@@ -9,16 +9,17 @@
  */
 
 package openapi
+
 // Object struct for Object
 type Object struct {
-	Name string `json:"Name" xml:"Name"`
-	Description1 string `json:"Description1,omitempty" xml:"Description1"`
-	Description2 string `json:"Description2,omitempty" xml:"Description2"`
-	ObjectID int32 `json:"ObjectID" xml:"ObjectID"`
-	ObjectURN string `json:"ObjectURN,omitempty" xml:"ObjectURN"`
-	LWM2MVersion string `json:"LWM2MVersion,omitempty" xml:"LWM2MVersion"`
-	ObjectVersion string `json:"ObjectVersion,omitempty" xml:"ObjectVersion"`
-	MultipleInstances InstanceType `json:"MultipleInstances" xml:"MultipleInstances"`
-	Mandatory MandatoryType `json:"Mandatory" xml:"Mandatory"`
-	Resources ObjectResources `json:"Resources" xml:"Resources"`
+	Name              string          `json:"Name" xml:"Name"`
+	Description1      string          `json:"Description1,omitempty" xml:"Description1"`
+	Description2      string          `json:"Description2,omitempty" xml:"Description2"`
+	ObjectID          int32           `json:"ObjectID" xml:"ObjectID"`
+	ObjectURN         string          `json:"ObjectURN,omitempty" xml:"ObjectURN"`
+	LWM2MVersion      string          `json:"LWM2MVersion,omitempty" xml:"LWM2MVersion"`
+	ObjectVersion     string          `json:"ObjectVersion,omitempty" xml:"ObjectVersion"`
+	MultipleInstances InstanceType    `json:"MultipleInstances" xml:"MultipleInstances"`
+	Mandatory         MandatoryType   `json:"Mandatory" xml:"Mandatory"`
+	Resources         ObjectResources `json:"Resources" xml:"Resources"`
 }

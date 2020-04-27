@@ -13,6 +13,8 @@ func TestDefaultConfiguration(t *testing.T) {
 		{name: "ValidDefaultConfiguration", want: &Configuration{
 			InitOnNew:      true,
 			SkipInitErrors: true,
+			Sanitize:       true,
+			Sanitizer:      DefaultSanitizer(),
 		}},
 	}
 	for _, tt := range tests {

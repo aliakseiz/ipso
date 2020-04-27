@@ -45,7 +45,7 @@ func (a *ObjectApiService) FindObject(ctx _context.Context, objectURI string) (L
 
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/{objectURI}"
-	localVarPath = strings.Replace(localVarPath, "{"+"objectURI"+"}", _neturl.QueryEscape(parameterToString(objectURI, "")) , -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"objectURI"+"}", _neturl.QueryEscape(parameterToString(objectURI, "")), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := _neturl.Values{}
@@ -99,13 +99,13 @@ func (a *ObjectApiService) FindObject(ctx _context.Context, objectURI string) (L
 			newErr.model = v
 			return localVarReturnValue, localVarHTTPResponse, newErr
 		}
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarReturnValue, localVarHTTPResponse, newErr
-			}
-			newErr.model = v
+		var v Error
+		err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+		if err != nil {
+			newErr.error = err.Error()
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		newErr.model = v
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

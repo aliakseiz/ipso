@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/url"
+	"strings"
 
 	openapi "github.com/aliakseiz/ipso-registry/api/client"
 	"gopkg.in/yaml.v2"
@@ -28,14 +29,14 @@ type Registry struct {
 	Objects []Object
 }
 
+// TODO implement tests for registry
 // Registry interface
 // Export
 // Import
 // ImportFromAPI
 // Compare
-
-// TODO implement `FindObjectByID`, `FindResourceByID`,`FindObjectByName`, `FindResourceByName`,
-//  `FindObjectByDescription`, `FindResourceByDescription`
+// Sanitize
+// Find
 
 // New creates a new registry, using provided or default configuration.
 func New(cfg *Configuration) (*Registry, error) {
@@ -57,7 +58,41 @@ func New(cfg *Configuration) (*Registry, error) {
 		}
 	}
 
+	if reg.Config.Sanitize {
+		reg.Sanitize()
+	}
+
 	return reg, nil
+}
+
+// TODO implement sanitization using regular expressions
+
+// Sanitize removes unwanted strings from objects and resources description fields
+// using sanitizer strings from registry configuration. Also removes leading and trailing spaces.
+// Description fields in objects and resources do not follow any single format or convention
+// with regards to line breaks, lists presentation, special characters escaping etc.
+// thus in some cases cannot be used directly in external applications (i.e. properly displayed in browser).
+func (r *Registry) Sanitize() {
+	// TODO run in parallel goroutines to speed it up
+	for _, s := range r.Config.Sanitizer {
+		for oIndex := 0; oIndex < len(r.Objects); oIndex++ {
+			object := &r.Objects[oIndex] // Modify the object in registry instead of object's copy
+			object.Description1 = strings.ReplaceAll(object.Description1, s, "")
+			object.Description1 = strings.TrimSpace(object.Description1)
+			object.Description2 = strings.ReplaceAll(object.Description2, s, "")
+			object.Description2 = strings.TrimSpace(object.Description2)
+
+			for rIndex := 0; rIndex < len(r.Objects[oIndex].Resources); rIndex++ {
+				resource := &r.Objects[oIndex].Resources[rIndex]
+				resource.Description = strings.ReplaceAll(resource.Description, s, "")
+				resource.Description = strings.TrimSpace(resource.Description)
+				resource.RangeEnumeration = strings.ReplaceAll(resource.RangeEnumeration, s, "")
+				resource.RangeEnumeration = strings.TrimSpace(resource.RangeEnumeration)
+				resource.Units = strings.ReplaceAll(resource.Units, s, "")
+				resource.Units = strings.TrimSpace(resource.Units)
+			}
+		}
+	}
 }
 
 // Export stores registry objects and resources in a specified file in YAML format.
@@ -75,7 +110,7 @@ func (r *Registry) Export(filename string) error {
 }
 
 // Import loads objects and resources from file.
-// Overwrites current registry Objects and Resources.
+// Overwrites current registry objects and rObesources.
 func (r *Registry) Import(filename string) error {
 	if filename == "" {
 		return errEmptyFilename
@@ -90,7 +125,7 @@ func (r *Registry) Import(filename string) error {
 }
 
 // ImportFromAPI initializes the registry from official OMA API.
-// Overwrites current registry Objects and Resources.
+// Overwrites current registry objects and resources.
 // TODO make import asynchronous, run it in separate go routine
 // TODO block Find and Export operations while importing to avoid inconsistent state
 func (r *Registry) ImportFromAPI() ([]Object, error) {
@@ -171,6 +206,9 @@ func (r *Registry) Compare(reg *Registry) []*ObjectComparison {
 
 	return objComp
 }
+
+// TODO implement `FindObjectByID`, `FindResourceByID`,`FindObjectByName`, `FindResourceByName`,
+//  `FindObjectByDescription`, `FindResourceByDescription`
 
 // Find looks for an object in current registry.
 func (r *Registry) Find(o *Object) (*Object, error) {

@@ -9,6 +9,7 @@
  */
 
 package openapi
+
 // ObjectResources struct for ObjectResources
 type ObjectResources struct {
 	Item []Resource `json:"Item,omitempty" xml:"Item"`
