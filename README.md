@@ -6,6 +6,17 @@
 
 ---
 
+## Functionality
+
+- Import registry from OMA API
+- Export registry to YAML-file
+- Import registry from file
+- Compare two registries
+- Find objects and resources by ID
+- Find resources by object ID and resource ID
+- Sanitize objects and resources text fields
+---
+
 ## Usage examples
 
 Initialize registry from OMA API:
