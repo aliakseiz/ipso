@@ -19,8 +19,8 @@ type Object struct {
 // ObjectComparison contains details of two objects comparison
 type ObjectComparison struct {
 	Difference DifferenceType
-	Object     *Object // object in existing registry
-	ObjectComp *Object // object in compared registry, which is passed as parameter to Compare function
+	Object     Object // object in existing registry
+	ObjectComp Object // object in compared registry, which is passed as parameter to Compare function
 }
 
 func mapObject(omaObject *openapi.Object) Object {

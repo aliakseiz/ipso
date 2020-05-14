@@ -20,6 +20,7 @@ var (
 	errEmptyObjectURL = errors.New("empty object description URL")
 	errEmptyFilename  = errors.New("filename is empty")
 	errObjNotFound    = errors.New("object not found")
+	errResNotFound    = errors.New("resource not found")
 )
 
 // Registry holds objects and settings.
@@ -154,9 +155,9 @@ func (r *Registry) ImportFromAPI() ([]Object, error) {
 
 // Compare makes comparison of r and reg registries.
 // Returns a list of non-equal objects with difference explanation.
-func (r *Registry) Compare(reg *Registry) []*ObjectComparison {
+func (r *Registry) Compare(reg *Registry) []ObjectComparison {
 	// TODO store objects in registry in maps to improve lookup performance
-	var objComp []*ObjectComparison
+	var objComp []ObjectComparison
 
 	// Compare r with reg
 	for _, regObj := range reg.Objects {
@@ -166,16 +167,16 @@ func (r *Registry) Compare(reg *Registry) []*ObjectComparison {
 
 			switch err {
 			case errObjNotFound:
-				objComp = append(objComp, &ObjectComparison{
+				objComp = append(objComp, ObjectComparison{
 					Difference: DifferenceTypeNewObject,
-					Object:     nil,
-					ObjectComp: &regObjCopy,
+					Object:     Object{},
+					ObjectComp: regObjCopy,
 				})
 			default:
-				objComp = append(objComp, &ObjectComparison{
+				objComp = append(objComp, ObjectComparison{
 					Difference: DifferenceTypeUnknown,
 					Object:     rObj,
-					ObjectComp: &regObjCopy,
+					ObjectComp: regObjCopy,
 				})
 			}
 		}
@@ -189,15 +190,15 @@ func (r *Registry) Compare(reg *Registry) []*ObjectComparison {
 
 			switch err {
 			case errObjNotFound:
-				objComp = append(objComp, &ObjectComparison{
+				objComp = append(objComp, ObjectComparison{
 					Difference: DifferenceTypeObjectRemoved,
-					Object:     &rObjCopy,
-					ObjectComp: nil,
+					Object:     rObjCopy,
+					ObjectComp: Object{},
 				})
 			default:
-				objComp = append(objComp, &ObjectComparison{
+				objComp = append(objComp, ObjectComparison{
 					Difference: DifferenceTypeUnknown,
-					Object:     &rObjCopy,
+					Object:     rObjCopy,
 					ObjectComp: regObj,
 				})
 			}
@@ -207,18 +208,81 @@ func (r *Registry) Compare(reg *Registry) []*ObjectComparison {
 	return objComp
 }
 
-// TODO implement `FindObjectByID`, `FindResourceByID`,`FindObjectByName`, `FindResourceByName`,
-//  `FindObjectByDescription`, `FindResourceByDescription`
+// TODO implement `FindObjectByName`, `FindResourceByName`, `FindObjectByDescription`, `FindResourceByDescription`
 
 // Find looks for an object in current registry.
-func (r *Registry) Find(o *Object) (*Object, error) {
+// Returns an empty object and error, when object not found.
+func (r *Registry) Find(o *Object) (Object, error) {
 	for _, rObj := range r.Objects {
 		if rObj.ObjectID == o.ObjectID && rObj.ObjectVersion == o.ObjectVersion {
-			return &rObj, nil
+			return rObj, nil
 		}
 	}
 
-	return nil, errObjNotFound
+	return Object{}, errObjNotFound
+}
+
+// FindObjectsByID finds objects in registry by ID.
+// Multiple objects with same ID and different versions could be returned.
+// Returns an error, when object not found.
+func (r *Registry) FindObjectsByID(id int32) ([]Object, error) {
+	var objects []Object
+
+	for _, rObj := range r.Objects {
+		if rObj.ObjectID == id {
+			objects = append(objects, rObj)
+		}
+	}
+
+	if len(objects) == 0 {
+		return nil, errObjNotFound
+	}
+
+	return objects, nil
+}
+
+// FindResourcesByID finds resources in registry by ID.
+// Returns matching resources from all objects of all versions.
+// Returns an error, when resource not found.
+func (r *Registry) FindResourcesByID(id int32) ([]Resource, error) {
+	var resources []Resource
+
+	for _, rObj := range r.Objects {
+		for _, rRes := range rObj.Resources {
+			if rRes.ID == id {
+				resources = append(resources, rRes)
+			}
+		}
+	}
+
+	if len(resources) == 0 {
+		return nil, errResNotFound
+	}
+
+	return resources, nil
+}
+
+// FindResourcesByObjResIDs finds specific resource in registry by object ID and resource ID.
+// Returns matching resources from all versions of specific object.
+// Returns an error, when resource or object not found.
+func (r *Registry) FindResourcesByObjResIDs(objID, resID int32) ([]Resource, error) {
+	var resources []Resource
+
+	for _, rObj := range r.Objects {
+		if rObj.ObjectID == objID {
+			for _, rRes := range rObj.Resources {
+				if rRes.ID == resID {
+					resources = append(resources, rRes)
+				}
+			}
+		}
+	}
+
+	if len(resources) == 0 {
+		return nil, errResNotFound
+	}
+
+	return resources, nil
 }
 
 // getObjectsMeta retrieve all objects metadata.
