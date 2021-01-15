@@ -1,6 +1,6 @@
 package registry
 
-// Configuration to control the registry
+// Configuration to control the registry.
 type Configuration struct {
 	InitOnNew      bool     // indicates whether registry should be initialized from API on creation
 	SkipInitErrors bool     // indicates whether to ignore particular resource or object initialization errors
@@ -9,7 +9,7 @@ type Configuration struct {
 	// TODO add `Throttle` field to decrease load on OMAs API
 }
 
-// DefaultConfiguration creates a Configuration with the default settings
+// DefaultConfiguration creates a Configuration with the default settings.
 func DefaultConfiguration() *Configuration {
 	return &Configuration{
 		InitOnNew:      true,
