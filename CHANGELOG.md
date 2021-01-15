@@ -7,10 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
-- Added this changelog
 
 ### Changed
-- Replaced OpenAPI client with native "net/http" calls 
 
 ### Fixed
 
@@ -20,6 +18,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
+## [0.0.2] - 2021-01-15
+
+### Added
+- Added this changelog
+
+### Changed
+- Replaced OpenAPI client with native "net/http" calls 
 
 ## [0.0.1] - 2020-06-11
 Initial release
