@@ -2,25 +2,21 @@
 package registry
 
 import (
-	"context"
+	"encoding/json"
+	"encoding/xml"
 	"errors"
 	"io/ioutil"
-	"net/url"
+	"net/http"
 	"strings"
+	"time"
 
-	openapi "github.com/aliakseiz/ipso-registry/api/client"
-	"gopkg.in/yaml.v2"
-)
-
-const (
-	objectsMetaBasePath = "/api/lwm2m/v1/"
+	"gopkg.in/yaml.v3"
 )
 
 var (
-	errEmptyObjectURL = errors.New("empty object description URL")
-	errEmptyFilename  = errors.New("filename is empty")
-	errObjNotFound    = errors.New("object not found")
-	errResNotFound    = errors.New("resource not found")
+	errEmptyFilename = errors.New("filename is empty")
+	errObjNotFound   = errors.New("object not found")
+	errResNotFound   = errors.New("resource not found")
 )
 
 // Registry holds objects and settings.
@@ -77,14 +73,14 @@ func (r *Registry) Sanitize() {
 	// TODO run in parallel goroutines to speed it up
 	for _, s := range r.Config.Sanitizer {
 		for oIndex := 0; oIndex < len(r.Objects); oIndex++ {
-			object := &r.Objects[oIndex] // Modify the object in registry instead of object's copy
+			object := r.Objects[oIndex] // Modify the object in registry instead of object's copy
 			object.Description1 = strings.ReplaceAll(object.Description1, s, "")
 			object.Description1 = strings.TrimSpace(object.Description1)
 			object.Description2 = strings.ReplaceAll(object.Description2, s, "")
 			object.Description2 = strings.TrimSpace(object.Description2)
 
-			for rIndex := 0; rIndex < len(r.Objects[oIndex].Resources); rIndex++ {
-				resource := &r.Objects[oIndex].Resources[rIndex]
+			for rIndex := 0; rIndex < len(r.Objects[oIndex].Resources.Item); rIndex++ {
+				resource := &r.Objects[oIndex].Resources.Item[rIndex]
 				resource.Description = strings.ReplaceAll(resource.Description, s, "")
 				resource.Description = strings.TrimSpace(resource.Description)
 				resource.RangeEnumeration = strings.ReplaceAll(resource.RangeEnumeration, s, "")
@@ -107,7 +103,7 @@ func (r *Registry) Export(filename string) error {
 		return err
 	}
 
-	return ioutil.WriteFile(filename, data, 0644)
+	return ioutil.WriteFile(filename, data, 0o644)
 }
 
 // Import loads objects and resources from file.
@@ -147,7 +143,7 @@ func (r *Registry) ImportFromAPI() ([]Object, error) {
 			return nil, err
 		}
 
-		objects = append(objects, mapObject(object))
+		objects = append(objects, *object) // TODO nil check
 	}
 
 	return objects, nil
@@ -248,7 +244,7 @@ func (r *Registry) FindResourcesByID(id int32) ([]Resource, error) {
 	var resources []Resource
 
 	for _, rObj := range r.Objects {
-		for _, rRes := range rObj.Resources {
+		for _, rRes := range rObj.Resources.Item {
 			if rRes.ID == id {
 				resources = append(resources, rRes)
 			}
@@ -270,7 +266,7 @@ func (r *Registry) FindResourcesByObjResIDs(objID, resID int32) ([]Resource, err
 
 	for _, rObj := range r.Objects {
 		if rObj.ObjectID == objID {
-			for _, rRes := range rObj.Resources {
+			for _, rRes := range rObj.Resources.Item {
 				if rRes.ID == resID {
 					resources = append(resources, rRes)
 				}
@@ -285,41 +281,82 @@ func (r *Registry) FindResourcesByObjResIDs(objID, resID int32) ([]Resource, err
 	return resources, nil
 }
 
+// ObjectMeta struct for ObjectMeta
+type ObjectMeta struct {
+	ObjectID          int32  `json:"ObjectID" xml:"ObjectID"`
+	Ver               string `json:"Ver,omitempty" xml:"Ver"`
+	URN               string `json:"URN,omitempty" xml:"URN"`
+	Name              string `json:"Name" xml:"Name"`
+	Description       string `json:"Description,omitempty" xml:"Description"`
+	Owner             string `json:"Owner,omitempty" xml:"Owner"`
+	Label             string `json:"Label,omitempty" xml:"Label"`
+	ObjectLink        string `json:"ObjectLink" xml:"ObjectLink"`
+	ObjectLinkVisible string `json:"ObjectLinkVisible,omitempty" xml:"ObjectLinkVisible"`
+	SpecLink          string `json:"SpecLink,omitempty" xml:"SpecLink"`
+	SpecLinkVisible   string `json:"SpecLinkVisible,omitempty" xml:"SpecLinkVisible"`
+	VortoLink         string `json:"VortoLink,omitempty" xml:"VortoLink"`
+}
+
 // getObjectsMeta retrieve all objects metadata.
-func (r *Registry) getObjectsMeta() ([]openapi.ObjectMeta, error) {
-	cfg := openapi.NewConfiguration()
-	cfg.BasePath += objectsMetaBasePath
-	client := openapi.NewAPIClient(cfg)
+func (r *Registry) getObjectsMeta() ([]ObjectMeta, error) {
+	u := "http://www.openmobilealliance.org/api/lwm2m/v1/Object"
 
-	// TODO allow to choose object version
-	// ObjectVersion: optional.NewString(objectVersionLatest)
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
 
-	objects, _, err := client.ObjectsApi.FindObjects(context.Background(), &openapi.FindObjectsOpts{})
+	resp, err := client.Get(u)
 	if err != nil {
 		return nil, err
 	}
 
-	return objects, nil
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			// TODO log error
+		}
+	}()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var objectMetas []ObjectMeta
+
+	if err := json.Unmarshal(body, &objectMetas); err != nil {
+		return nil, err
+	}
+
+	return objectMetas, nil
 }
 
 // getObject fetch object details based on metadata.
-func (r *Registry) getObject(objectMeta openapi.ObjectMeta) (*openapi.Object, error) {
-	cfg := openapi.NewConfiguration()
-	client := openapi.NewAPIClient(cfg)
+func (r *Registry) getObject(objectMeta ObjectMeta) (*Object, error) {
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
 
-	objURL, err := url.Parse(objectMeta.ObjectLink)
+	resp, err := client.Get(objectMeta.ObjectLink)
 	if err != nil {
 		return nil, err
 	}
 
-	if objURL.Path == "" {
-		return nil, errEmptyObjectURL
-	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			// TODO log error
+		}
+	}()
 
-	object, _, err := client.ObjectApi.FindObject(context.Background(), objURL.Path[1:]) // 1: - skip leading /
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	return &object.Object, nil
+	var lwm2m Lwm2M
+
+	if err := xml.Unmarshal(body, &lwm2m); err != nil {
+		return nil, err
+	}
+
+	return &lwm2m.Object, nil
 }
