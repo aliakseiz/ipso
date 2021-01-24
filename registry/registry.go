@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aliakseiz/ipso-registry/ipso"
 	"github.com/cenkalti/backoff/v4"
 	"gopkg.in/yaml.v3"
 )
@@ -213,7 +214,6 @@ func (r *Registry) Compare(reg *Registry) []*ObjectComparison {
 // TODO implement `FindObjectByName`, `FindResourceByName`, `FindObjectByDescription`, `FindResourceByDescription`
 
 // Find looks for an object in current registry.
-// Returns an error, when object not found.
 func (r *Registry) Find(o *Object) (*Object, error) {
 	for _, rObj := range r.Objects {
 		if rObj.ObjectID == o.ObjectID && rObj.ObjectVersion == o.ObjectVersion {
@@ -224,26 +224,35 @@ func (r *Registry) Find(o *Object) (*Object, error) {
 	return nil, errObjNotFound
 }
 
-// FindObjectsByID finds objects in registry by ID.
-// Multiple objects with same ID and different versions could be returned.
-// Returns an error, when object not found.
-func (r *Registry) FindObjectsByID(id int64) ([]*Object, error) {
-
-	if objByVer, ok := r.objByID[id]; ok {
-		var objects []*Object
-		// Convert objByVer map to a slice
-		for _, obj := range objByVer {
-			objects = append(objects, obj)
-		}
-
-		return objects, nil
+// FindObject finds objects in registry by ID and version.
+// Uses latest object version, when `ver` is 0.
+func (r *Registry) FindObject(id int64, ver float64) (*Object, error) {
+	objByMap, ok := r.objByID[id]
+	if !ok {
+		return nil, errObjNotFound
 	}
 
-	return nil, errObjNotFound
+	// Find the latest version of an object
+	if ver == 0 {
+		max := float64(-1)
+
+		for v := range objByMap {
+			if v > max || max == -1 {
+				max = v
+			}
+		}
+	}
+
+	// Get the object by version
+	obj, ok := objByMap[ver]
+	if !ok {
+		return nil, errObjVerNotFound
+	}
+
+	return obj, nil
 }
 
 // FindObjectByURN finds an object in registry by URN.
-// Returns an error, when object not found or URN is not valid.
 func (r *Registry) FindObjectByURN(urn string) (*Object, error) {
 	u, err := parseURN(urn)
 	if err != nil {
@@ -257,6 +266,54 @@ func (r *Registry) FindObjectByURN(urn string) (*Object, error) {
 	}
 
 	return nil, errObjNotFound
+}
+
+// FindObjectsByID finds objects in registry by ID.
+// Multiple objects with same ID and different versions could be returned.
+func (r *Registry) FindObjectsByID(id int64) ([]*Object, error) {
+	if objByVer, ok := r.objByID[id]; ok {
+		var objects []*Object
+		// Convert objByVer map to a slice
+		for _, obj := range objByVer {
+			objects = append(objects, obj)
+		}
+
+		return objects, nil
+	}
+
+	return nil, errObjNotFound
+}
+
+// FindResource returns specific resource from registry by object ID, object version and resource ID.
+// Uses latest object version, when `objVer` is 0.
+// Returns an error, when resource or object not found.
+func (r *Registry) FindResource(objID, resID int64, objVer float64) (*Resource, error) {
+	_, res, err := r.findResource(objID, resID, objVer)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+// findResource returns specific resource and object containing it.
+// Finds in registry by object ID, object version and resource ID.
+// Uses latest object version, when `objVer` is 0.
+// Returns an error, when resource or object not found.
+func (r *Registry) findResource(objID, resID int64, objVer float64) (*Object, *Resource, error) {
+	obj, err := r.FindObject(objID, objVer)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// Find a resource by ID
+	for _, res := range obj.Resources.Item {
+		if res.ID == resID {
+			return obj, &res, nil
+		}
+	}
+
+	return nil, nil, errResNotFound
 }
 
 // FindResourcesByID finds resources in registry by ID.
@@ -280,40 +337,20 @@ func (r *Registry) FindResourcesByID(id int64) ([]Resource, error) {
 	return resources, nil
 }
 
-// FindResource returns specific resource from registry by object ID, object version and resource ID.
-// Uses latest object version, when object version is `0`.
-// Returns an error, when resource or object not found.
-func (r *Registry) FindResource(objID, resID int64, objVer float64) (*Resource, error) {
-	objByMap, ok := r.objByID[objID]
-	if !ok {
-		return nil, errObjNotFound
+// FindByOIR returns Object and Resource corresponding to OIR.
+// Uses latest object version, when `ver` is 0.
+func (r *Registry) FindByOIR(oir string, ver float64) (*Object, *Resource, error) {
+	objID, _, resID, err := ipso.ParseOIR(oir)
+	if err != nil {
+		return nil, nil, err
 	}
 
-	// Find the latest version of an object
-	if objVer == 0 {
-		max := float64(-1)
-
-		for ver := range objByMap {
-			if ver > max || max == -1 {
-				max = ver
-			}
-		}
+	obj, res, err := r.findResource(objID, resID, ver)
+	if err != nil {
+		return nil, nil, err
 	}
 
-	// Get the object by version
-	obj, ok := objByMap[objVer]
-	if !ok {
-		return nil, errObjVerNotFound
-	}
-
-	// Find a resource by ID
-	for _, res := range obj.Resources.Item {
-		if res.ID == resID {
-			return &res, nil
-		}
-	}
-
-	return nil, errResNotFound
+	return obj, res, nil
 }
 
 // getObjectsMeta retrieve all objects metadata.
