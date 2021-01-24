@@ -2,7 +2,7 @@ package registry
 
 // Resource structure represents OMA Resource entity
 type Resource struct {
-	ID                int32         `json:"ID" xml:"ID,attr"`
+	ID                int64         `json:"ID" xml:"ID,attr"`
 	Name              string        `json:"Name" xml:"Name"`
 	Operations        OperationType `json:"Operations" xml:"Operations"`
 	MultipleInstances InstanceType  `json:"MultipleInstances" xml:"MultipleInstances"`
