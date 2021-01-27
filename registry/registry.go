@@ -2,7 +2,6 @@
 package registry
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"io/ioutil"
@@ -125,7 +124,17 @@ func (r *Registry) Import(filename string) error {
 		return err
 	}
 
-	return yaml.Unmarshal(data, &r.Objects)
+	if err := yaml.Unmarshal(data, &r.Objects); err != nil {
+		return err
+	}
+
+	for i := range r.Objects {
+		if r.Objects[i].ObjectVersion == "" {
+			r.Objects[i].ObjectVersion = "1.0"
+		}
+	}
+
+	return nil
 }
 
 // ImportFromAPI initializes the registry from official OMA API.
@@ -150,7 +159,16 @@ func (r *Registry) ImportFromAPI() ([]*Object, error) {
 			return nil, err
 		}
 
+		if object.ObjectVersion == "" {
+			object.ObjectVersion = "1.0"
+		}
+
+		if object.LWM2MVersion == "" {
+			object.LWM2MVersion = "1.0"
+		}
+
 		objects = append(objects, object)
+
 	}
 
 	return objects, nil
@@ -362,7 +380,7 @@ func (r *Registry) getObjectsMeta() ([]ObjectMeta, error) {
 
 	var objectsMeta []ObjectMeta
 
-	if err := json.Unmarshal(body, &objectsMeta); err != nil {
+	if err := xml.Unmarshal(body, &objectsMeta); err != nil {
 		return nil, err
 	}
 
@@ -393,10 +411,13 @@ func httpGet(url string) ([]byte, error) {
 	bo.MaxInterval = time.Second * 5                // max wait time until next retry
 	client := http.Client{Timeout: 3 * time.Second} // timeout for single request
 
-	var resp *http.Response
+	var bytes []byte
 
 	err := backoff.Retry(func() error {
-		var err error
+		var (
+			err  error
+			resp *http.Response
+		)
 
 		resp, err = client.Get(url)
 		if err != nil {
@@ -405,11 +426,16 @@ func httpGet(url string) ([]byte, error) {
 
 		defer resp.Body.Close()
 
+		bytes, err = ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	}, bo)
 	if err != nil {
 		return nil, err
 	}
 
-	return ioutil.ReadAll(resp.Body)
+	return bytes, nil
 }

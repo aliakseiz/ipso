@@ -2,42 +2,42 @@ package registry
 
 // Lwm2M struct for Lwm2M wrapper entry.
 type Lwm2M struct {
-	Object *Object `json:"Object,omitempty" xml:"Object"`
+	Object *Object `xml:"Object"`
 }
 
 // ObjectMeta struct for ObjectMeta.
 type ObjectMeta struct {
-	ObjectID          int64  `json:"ObjectID" xml:"ObjectID"`
-	Ver               string `json:"Ver,omitempty" xml:"Ver"`
-	URN               string `json:"URN,omitempty" xml:"URN"`
-	Name              string `json:"Name" xml:"Name"`
-	Description       string `json:"Description,omitempty" xml:"Description"`
-	Owner             string `json:"Owner,omitempty" xml:"Owner"`
-	Label             string `json:"Label,omitempty" xml:"Label"`
-	ObjectLink        string `json:"ObjectLink" xml:"ObjectLink"`
-	ObjectLinkVisible string `json:"ObjectLinkVisible,omitempty" xml:"ObjectLinkVisible"`
-	SpecLink          string `json:"SpecLink,omitempty" xml:"SpecLink"`
-	SpecLinkVisible   string `json:"SpecLinkVisible,omitempty" xml:"SpecLinkVisible"`
-	VortoLink         string `json:"VortoLink,omitempty" xml:"VortoLink"`
+	ObjectID          int64  `xml:"ObjectID"`
+	Ver               string `xml:"Ver"`
+	URN               string `xml:"URN"`
+	Name              string `xml:"Name"`
+	Description       string `xml:"Description"`
+	Owner             string `xml:"Owner"`
+	Label             string `xml:"Label"`
+	ObjectLink        string `xml:"ObjectLink"`
+	ObjectLinkVisible string `xml:"ObjectLinkVisible"`
+	SpecLink          string `xml:"SpecLink"`
+	SpecLinkVisible   string `xml:"SpecLinkVisible"`
+	VortoLink         string `xml:"VortoLink"`
 }
 
 // Object structure represents OMA Object entity.
 type Object struct {
-	Name              string          `json:"Name" xml:"Name"`
-	Description1      string          `json:"Description1,omitempty" xml:"Description1"`
-	Description2      string          `json:"Description2,omitempty" xml:"Description2"`
-	ObjectID          int64           `json:"ObjectID" xml:"ObjectID"`
-	ObjectURN         string          `json:"ObjectURN,omitempty" xml:"ObjectURN"`
-	LWM2MVersion      string          `json:"LWM2MVersion,omitempty" xml:"LWM2MVersion"`
-	ObjectVersion     string          `json:"ObjectVersion,omitempty" xml:"ObjectVersion"`
-	MultipleInstances InstanceType    `json:"MultipleInstances" xml:"MultipleInstances"`
-	Mandatory         MandatoryType   `json:"Mandatory" xml:"Mandatory"`
-	Resources         ObjectResources `json:"Resources" xml:"Resources"`
+	Name              string          `xml:"Name" yaml:"Name"`
+	Description1      string          `xml:"Description1" yaml:"Description1"`
+	Description2      string          `xml:"Description2" yaml:"Description2,omitempty"`
+	ObjectID          int64           `xml:"ObjectID" yaml:"ObjectID"`
+	ObjectURN         string          `xml:"ObjectURN" yaml:"ObjectURN"`
+	LWM2MVersion      string          `xml:"LWM2MVersion" yaml:"LWM2MVersion,omitempty"`
+	ObjectVersion     string          `xml:"ObjectVersion" yaml:"ObjectVersion"`
+	MultipleInstances InstanceType    `xml:"MultipleInstances" yaml:"MultipleInstances"`
+	Mandatory         MandatoryType   `xml:"Mandatory" yaml:"Mandatory"`
+	Resources         ObjectResources `xml:"Resources" yaml:"Resources,inline"`
 }
 
 // ObjectResources struct for ObjectResources field.
 type ObjectResources struct {
-	Item []Resource `json:"Item,omitempty" xml:"Item"`
+	Item []Resource `xml:"Item" yaml:"Resources"`
 }
 
 // ObjectComparison contains details of two objects comparison.
