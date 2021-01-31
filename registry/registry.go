@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -62,6 +63,8 @@ func New(cfg *Configuration) (*Registry, error) {
 	if reg.Config.Sanitize {
 		reg.Sanitize()
 	}
+
+	reg.objByID = make(map[int64]map[float64]*Object)
 
 	return reg, nil
 }
@@ -132,6 +135,19 @@ func (r *Registry) Import(filename string) error {
 		if r.Objects[i].ObjectVersion == "" {
 			r.Objects[i].ObjectVersion = "1.0"
 		}
+	}
+
+	for _, object := range r.Objects {
+		if _, ok := r.objByID[object.ObjectID]; !ok {
+			r.objByID[object.ObjectID] = make(map[float64]*Object)
+		}
+
+		ver, err := strconv.ParseFloat(object.ObjectVersion, 64)
+		if err != nil {
+			return err
+		}
+
+		r.objByID[object.ObjectID][ver] = object
 	}
 
 	return nil
