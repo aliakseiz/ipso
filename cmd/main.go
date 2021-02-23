@@ -18,7 +18,7 @@ func main() {
 	}
 
 	// Initialize another registry from file
-	cfg := &registry.Configuration{
+	cfg := registry.Configuration{
 		InitOnNew:      false,
 		SkipInitErrors: false,
 		Sanitize:       false,

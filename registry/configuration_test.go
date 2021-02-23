@@ -8,9 +8,9 @@ import (
 func TestDefaultConfiguration(t *testing.T) {
 	tests := []struct {
 		name string
-		want *Configuration
+		want Configuration
 	}{
-		{name: "ValidDefaultConfiguration", want: &Configuration{
+		{name: "ValidDefaultConfiguration", want: Configuration{
 			InitOnNew:      true,
 			SkipInitErrors: true,
 			Sanitize:       true,

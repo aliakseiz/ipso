@@ -21,8 +21,7 @@ var (
 
 // Registry holds objects and settings.
 type Registry struct {
-	Config *Configuration
-
+	Config  Configuration
 	Objects []Object
 }
 
@@ -36,22 +35,18 @@ type Registry struct {
 // Find
 
 // New creates a new registry, using provided or default configuration.
-func New(cfg *Configuration) (*Registry, error) {
-	var err error
-
-	reg := &Registry{
+func New(cfg Configuration) (Registry, error) {
+	reg := Registry{
 		Config:  cfg,
 		Objects: nil,
 	}
 
-	if reg.Config == nil {
-		reg.Config = DefaultConfiguration()
-	}
-
 	if reg.Config.InitOnNew {
+		var err error
+
 		reg.Objects, err = reg.ImportFromAPI()
 		if err != nil {
-			return nil, err
+			return reg, err
 		}
 	}
 
@@ -107,7 +102,7 @@ func (r *Registry) Export(filename string) error {
 }
 
 // Import loads objects and resources from file.
-// Overwrites current registry objects and rObesources.
+// Overwrites current registry objects and resources.
 func (r *Registry) Import(filename string) error {
 	if filename == "" {
 		return errEmptyFilename
@@ -124,7 +119,7 @@ func (r *Registry) Import(filename string) error {
 // ImportFromAPI initializes the registry from official OMA API.
 // Overwrites current registry objects and resources.
 // TODO make import asynchronous, run it in separate go routine
-// TODO block Find and Export operations while importing to avoid inconsistent state
+// TODO block Find and Export operations while importing to avoid inconsistent state.
 func (r *Registry) ImportFromAPI() ([]Object, error) {
 	objectsMeta, err := r.getObjectsMeta()
 	if err != nil {
@@ -143,7 +138,7 @@ func (r *Registry) ImportFromAPI() ([]Object, error) {
 			return nil, err
 		}
 
-		objects = append(objects, *object) // TODO nil check
+		objects = append(objects, object)
 	}
 
 	return objects, nil
@@ -151,13 +146,13 @@ func (r *Registry) ImportFromAPI() ([]Object, error) {
 
 // Compare makes comparison of r and reg registries.
 // Returns a list of non-equal objects with difference explanation.
-func (r *Registry) Compare(reg *Registry) []ObjectComparison {
+func (r *Registry) Compare(reg Registry) []ObjectComparison {
 	// TODO store objects in registry in maps to improve lookup performance
 	var objComp []ObjectComparison
 
 	// Compare r with reg
 	for _, regObj := range reg.Objects {
-		if rObj, err := r.Find(&regObj); err != nil {
+		if rObj, err := r.Find(regObj); err != nil {
 			regObjCopy := regObj
 			// rObjCopy := rObj
 
@@ -180,7 +175,7 @@ func (r *Registry) Compare(reg *Registry) []ObjectComparison {
 
 	// Compare reg with r
 	for _, rObj := range r.Objects {
-		if regObj, err := reg.Find(&rObj); err != nil {
+		if regObj, err := reg.Find(rObj); err != nil {
 			// regObjCopy := regObj
 			rObjCopy := rObj
 
@@ -208,7 +203,7 @@ func (r *Registry) Compare(reg *Registry) []ObjectComparison {
 
 // Find looks for an object in current registry.
 // Returns an empty object and error, when object not found.
-func (r *Registry) Find(o *Object) (Object, error) {
+func (r *Registry) Find(o Object) (Object, error) {
 	for _, rObj := range r.Objects {
 		if rObj.ObjectID == o.ObjectID && rObj.ObjectVersion == o.ObjectVersion {
 			return rObj, nil
@@ -281,42 +276,9 @@ func (r *Registry) FindResourcesByObjResIDs(objID, resID int32) ([]Resource, err
 	return resources, nil
 }
 
-// ObjectMeta struct for ObjectMeta
-type ObjectMeta struct {
-	ObjectID          int32  `json:"ObjectID" xml:"ObjectID"`
-	Ver               string `json:"Ver,omitempty" xml:"Ver"`
-	URN               string `json:"URN,omitempty" xml:"URN"`
-	Name              string `json:"Name" xml:"Name"`
-	Description       string `json:"Description,omitempty" xml:"Description"`
-	Owner             string `json:"Owner,omitempty" xml:"Owner"`
-	Label             string `json:"Label,omitempty" xml:"Label"`
-	ObjectLink        string `json:"ObjectLink" xml:"ObjectLink"`
-	ObjectLinkVisible string `json:"ObjectLinkVisible,omitempty" xml:"ObjectLinkVisible"`
-	SpecLink          string `json:"SpecLink,omitempty" xml:"SpecLink"`
-	SpecLinkVisible   string `json:"SpecLinkVisible,omitempty" xml:"SpecLinkVisible"`
-	VortoLink         string `json:"VortoLink,omitempty" xml:"VortoLink"`
-}
-
 // getObjectsMeta retrieve all objects metadata.
 func (r *Registry) getObjectsMeta() ([]ObjectMeta, error) {
-	u := "http://www.openmobilealliance.org/api/lwm2m/v1/Object"
-
-	client := http.Client{
-		Timeout: 5 * time.Second,
-	}
-
-	resp, err := client.Get(u)
-	if err != nil {
-		return nil, err
-	}
-
-	defer func() {
-		if err := resp.Body.Close(); err != nil {
-			// TODO log error
-		}
-	}()
-
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := getURL("http://www.openmobilealliance.org/api/lwm2m/v1/Object")
 	if err != nil {
 		return nil, err
 	}
@@ -331,12 +293,27 @@ func (r *Registry) getObjectsMeta() ([]ObjectMeta, error) {
 }
 
 // getObject fetch object details based on metadata.
-func (r *Registry) getObject(objectMeta ObjectMeta) (*Object, error) {
+func (r *Registry) getObject(objectMeta ObjectMeta) (Object, error) {
+	body, err := getURL(objectMeta.ObjectLink)
+	if err != nil {
+		return Object{}, err
+	}
+
+	var lwm2m Lwm2M
+
+	if err := xml.Unmarshal(body, &lwm2m); err != nil {
+		return Object{}, err
+	}
+
+	return lwm2m.Object, nil
+}
+
+func getURL(url string) ([]byte, error) {
 	client := http.Client{
 		Timeout: 5 * time.Second,
 	}
 
-	resp, err := client.Get(objectMeta.ObjectLink)
+	resp, err := client.Get(url)
 	if err != nil {
 		return nil, err
 	}
@@ -347,16 +324,5 @@ func (r *Registry) getObject(objectMeta ObjectMeta) (*Object, error) {
 		}
 	}()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var lwm2m Lwm2M
-
-	if err := xml.Unmarshal(body, &lwm2m); err != nil {
-		return nil, err
-	}
-
-	return &lwm2m.Object, nil
+	return ioutil.ReadAll(resp.Body)
 }
