@@ -65,14 +65,12 @@ func objToMap(objects []Object) map[int32]map[string]*Object {
 	objMap := make(map[int32]map[string]*Object)
 
 	for i, object := range objects {
-		objVerMap, ok := objMap[object.ObjectID]
-		if ok {
-			if objVerMap == nil {
-				objMap[object.ObjectID] = make(map[string]*Object)
-			}
-
-			objMap[object.ObjectID][object.ObjectVersion] = &objects[i]
+		_, ok := objMap[object.ObjectID]
+		if !ok {
+			objMap[object.ObjectID] = make(map[string]*Object)
 		}
+
+		objMap[object.ObjectID][object.ObjectVersion] = &objects[i]
 	}
 
 	return objMap
@@ -163,6 +161,14 @@ func (r *Registry) ImportFromAPI() ([]Object, error) {
 			}
 
 			return nil, err
+		}
+
+		if object.ObjectVersion == "" {
+			object.ObjectVersion = DefaultObjectVersion
+		}
+
+		if object.LWM2MVersion == "" {
+			object.LWM2MVersion = DefaultLwM2MVersion
 		}
 
 		objects = append(objects, object)

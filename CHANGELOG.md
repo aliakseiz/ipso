@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
+- Empty Object's `ObjectVersion` and `LwM2MVersion` fields initialization with default value "1.0"
 
 ### Changed
 - Replaced references in structures with objects
 
 ### Fixed
+- Incorrect registry initialization from YAML file
 
 ### Deprecated
 
