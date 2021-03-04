@@ -23,6 +23,8 @@ var (
 type Registry struct {
 	Config  Configuration
 	Objects []Object
+	// objIDVerMap map contains references to objects stored in Objects slice.
+	objIDVerMap map[int32]map[string]*Object // First key - ObjectID, second - Version
 }
 
 // TODO implement tests for registry
@@ -48,6 +50,8 @@ func New(cfg Configuration) (Registry, error) {
 		if err != nil {
 			return reg, err
 		}
+
+		reg.objIDVerMap = objToMap(reg.Objects)
 	}
 
 	if reg.Config.Sanitize {
@@ -55,6 +59,23 @@ func New(cfg Configuration) (Registry, error) {
 	}
 
 	return reg, nil
+}
+
+func objToMap(objects []Object) map[int32]map[string]*Object {
+	objMap := make(map[int32]map[string]*Object)
+
+	for i, object := range objects {
+		objVerMap, ok := objMap[object.ObjectID]
+		if ok {
+			if objVerMap == nil {
+				objMap[object.ObjectID] = make(map[string]*Object)
+			}
+
+			objMap[object.ObjectID][object.ObjectVersion] = &objects[i]
+		}
+	}
+
+	return objMap
 }
 
 // TODO implement sanitization using regular expressions
@@ -113,7 +134,13 @@ func (r *Registry) Import(filename string) error {
 		return err
 	}
 
-	return yaml.Unmarshal(data, &r.Objects)
+	if err := yaml.Unmarshal(data, &r.Objects); err != nil {
+		return err
+	}
+
+	r.objIDVerMap = objToMap(r.Objects)
+
+	return nil
 }
 
 // ImportFromAPI initializes the registry from official OMA API.
@@ -204,9 +231,9 @@ func (r *Registry) Compare(reg Registry) []ObjectComparison {
 // Find looks for an object in current registry.
 // Returns an empty object and error, when object not found.
 func (r *Registry) Find(o Object) (Object, error) {
-	for _, rObj := range r.Objects {
-		if rObj.ObjectID == o.ObjectID && rObj.ObjectVersion == o.ObjectVersion {
-			return rObj, nil
+	if objVerMap, ok := r.objIDVerMap[o.ObjectID]; ok {
+		if obj, ok := objVerMap[o.ObjectVersion]; ok {
+			return *obj, nil
 		}
 	}
 
@@ -219,13 +246,11 @@ func (r *Registry) Find(o Object) (Object, error) {
 func (r *Registry) FindObjectsByID(id int32) ([]Object, error) {
 	var objects []Object
 
-	for _, rObj := range r.Objects {
-		if rObj.ObjectID == id {
-			objects = append(objects, rObj)
+	if objVerMap, ok := r.objIDVerMap[id]; ok {
+		for _, object := range objVerMap {
+			objects = append(objects, *object)
 		}
-	}
-
-	if len(objects) == 0 {
+	} else {
 		return nil, errObjNotFound
 	}
 
@@ -275,6 +300,8 @@ func (r *Registry) FindResourcesByObjResIDs(objID, resID int32) ([]Resource, err
 
 	return resources, nil
 }
+
+// TODO func (r *Registry) FindResourcesByObjResIDsVer(objID, objVer, resID int32) ([]Resource, error) {
 
 // getObjectsMeta retrieve all objects metadata.
 func (r *Registry) getObjectsMeta() ([]ObjectMeta, error) {
