@@ -1,34 +1,34 @@
 package registry
 
-// InstanceType constants
+// InstanceType constants.
 const (
 	InstanceTypeSingle   InstanceType = "Single"
 	InstanceTypeMultiple InstanceType = "Multiple"
 )
 
-// InstanceType represents the type of data
+// InstanceType represents the type of data.
 type InstanceType string
 
-// String for InstanceType
+// String for InstanceType.
 func (e InstanceType) String() string {
 	return string(e)
 }
 
-// MandatoryType constants
+// MandatoryType constants.
 const (
 	MandatoryTypeOptional  MandatoryType = "Optional"
 	MandatoryTypeMandatory MandatoryType = "Mandatory"
 )
 
-// MandatoryType represents the type of data
+// MandatoryType represents the type of data.
 type MandatoryType string
 
-// String for MandatoryType
+// String for MandatoryType.
 func (e MandatoryType) String() string {
 	return string(e)
 }
 
-// OperationType constants
+// OperationType constants.
 const (
 	OperationTypeRead      OperationType = "R"
 	OperationTypeWrite     OperationType = "W"
@@ -36,15 +36,15 @@ const (
 	OperationTypeExecute   OperationType = "E"
 )
 
-// OperationType represents the type of data
+// OperationType represents the type of data.
 type OperationType string
 
-// String for OperationType
+// String for OperationType.
 func (e OperationType) String() string {
 	return string(e)
 }
 
-// ResourceType constants
+// ResourceType constants.
 const (
 	ResourceTypeString  ResourceType = "String"
 	ResourceTypeBoolean ResourceType = "Boolean"
@@ -54,25 +54,25 @@ const (
 	ResourceTypeOpaque  ResourceType = "Opaque"
 )
 
-// ResourceType represents the type of data
+// ResourceType represents the type of data.
 type ResourceType string
 
-// String for ResourceType
+// String for ResourceType.
 func (e ResourceType) String() string {
 	return string(e)
 }
 
-// DifferenceType constants
+// DifferenceType constants.
 const (
 	DifferenceTypeUnknown       DifferenceType = "Unknown reason"
 	DifferenceTypeNewObject     DifferenceType = "New object added"
 	DifferenceTypeObjectRemoved DifferenceType = "Object was removed"
 )
 
-// DifferenceType represents the objects difference explanation
+// DifferenceType represents the objects difference explanation.
 type DifferenceType string
 
-// String for ResourceType
+// String for ResourceType.
 func (e DifferenceType) String() string {
 	return string(e)
 }

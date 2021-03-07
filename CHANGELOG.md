@@ -18,6 +18,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
+## [0.0.3] - 2021-03-07
+
+### Added
+- Empty Object's `ObjectVersion` and `LwM2MVersion` fields initialization with default value "1.0"
+
+### Changed
+- Replaced references in structures with objects
+
+### Fixed
+- Incorrect registry initialization from YAML file
+- Slow object searching by ID
+
 ## [0.0.2] - 2021-01-15
 
 ### Added
