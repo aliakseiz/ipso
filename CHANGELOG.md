@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+### Security
+
+## [0.0.3] - 2021-03-07
+
+### Added
 - Empty Object's `ObjectVersion` and `LwM2MVersion` fields initialization with default value "1.0"
 
 ### Changed
@@ -14,12 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 - Incorrect registry initialization from YAML file
-
-### Deprecated
-
-### Removed
-
-### Security
+- Slow object searching by ID
 
 ## [0.0.2] - 2021-01-15
 
