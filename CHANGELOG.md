@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
+- Find object by ID and version
+- Find resource by object ID, object version and resource ID
+- Registry interface definition
 
 ### Changed
 

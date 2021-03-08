@@ -12,14 +12,14 @@
 - Export registry to YAML-file
 - Import registry from file
 - Compare two registries
-- Find objects and resources by ID
+- Find objects and resources by ID and version
 - Find resources by object ID and resource ID
 - Sanitize objects and resources text fields
 ---
 
 ## Usage examples
 
-Initialize registry from OMA API:
+Initialize a registry from OMA API:
 ```go
 reg, err := registry.New(registry.DefaultConfiguration())
 ```
@@ -29,18 +29,17 @@ Export initialized registry to YAML file:
 err := regAPI.Export("registry.yaml")
 ```
 
-Import previously exported registry from YAML file:
+Import a previously exported registry from YAML file:
 ```go
 err := reg.Import("registry.yaml")
 ```
 
-Create registry with custom configuration:
+Create a registry with custom configuration:
 ```go
-cfg := &registry.Configuration{
+cfg := registry.Configuration{
     InitOnNew:      false,
     SkipInitErrors: false,
     Sanitize: false,
-    Sanitizer: nil,
 }
 
 reg, err := registry.New(cfg)
@@ -48,12 +47,11 @@ reg, err := registry.New(cfg)
 
 Compare two registries:
 ```go
-comp := reg1.Compare(reg2)
+comp := reg1.Compare(reg2.GetRegistry())
 ```
 Remove unwanted strings from objects and resources description:
 ```go
-reg.Config.Sanitizer = registry.DefaultSanitizer()
-reg.Sanitize()
+reg.Sanitize(registry.DefaultSanitizer())
 ```
 
 ---

@@ -15,8 +15,7 @@ func DefaultConfiguration() Configuration {
 		InitOnNew:      true,
 		SkipInitErrors: true, // true by default, because OMA API returns some objects without ObjectLink filled in,
 		// which makes it impossible to initialize objects and resources with strict validation
-		Sanitize:  true,
-		Sanitizer: DefaultSanitizer(),
+		Sanitize: true,
 	}
 }
 

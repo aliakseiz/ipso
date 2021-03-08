@@ -12,7 +12,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// Store imported registry in file
+	// Store imported registry in the file
 	if err = regAPI.Export("registry.yaml"); err != nil {
 		panic(err)
 	}
@@ -34,15 +34,16 @@ func main() {
 		panic(err)
 	}
 
-	objComp := regFile.Compare(regAPI)
+	objComp := regFile.Compare(regAPI.GetRegistry())
 
 	log.Printf("objComp length: %d", len(objComp))
 
 	// Sanitize registry imported from API
-	regFile.Config.Sanitizer = registry.DefaultSanitizer()
-	regFile.Sanitize()
+	regFile.Sanitize(registry.DefaultSanitizer())
 	// Store sanitized registry in file
 	if err = regFile.Export("registry_sanitized.yaml"); err != nil {
 		panic(err)
 	}
+
+	log.Printf("finished successfully")
 }
