@@ -109,6 +109,7 @@ func (r *Reg) ImportFromAPI() ([]Object, error) {
 		return nil, err
 	}
 
+	// nolint:prealloc
 	var objects []Object
 
 	for _, objectMeta := range objectsMeta {
@@ -146,7 +147,7 @@ func (r *Reg) Export(filename string) error {
 		return err
 	}
 
-	return ioutil.WriteFile(filename, data, 0o644)
+	return ioutil.WriteFile(filename, data, 0o600)
 }
 
 // Compare makes comparison of r and reg registries.
@@ -339,7 +340,7 @@ func (r *Reg) Sanitize(sanitizer []string) {
 	}
 }
 
-// GetRegistry returns internal registry structure. Temporary solution, will be removed in next releases
+// GetRegistry returns internal registry structure. Temporary solution, will be removed in next releases.
 func (r *Reg) GetRegistry() *Reg {
 	return r
 }
@@ -392,7 +393,7 @@ func objToMap(objects []Object) map[int32]map[string]*Object {
 
 func getURL(url string) ([]byte, error) {
 	client := http.Client{
-		Timeout: 5 * time.Second,
+		Timeout: 5 * time.Second, // nolint:gomnd
 	}
 
 	resp, err := client.Get(url)

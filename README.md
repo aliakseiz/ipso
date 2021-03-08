@@ -55,7 +55,14 @@ reg.Sanitize(registry.DefaultSanitizer())
 ```
 
 ---
+## Linter
 
+```shell
+go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.38.0
+golangci-lint run --enable-all
+```
+
+---
 # License
 [MIT](LICENSE)
 

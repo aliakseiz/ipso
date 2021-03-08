@@ -1,9 +1,10 @@
 package registry_test
 
 import (
-	"github.com/aliakseiz/ipso-registry/registry"
 	"reflect"
 	"testing"
+
+	"github.com/aliakseiz/ipso-registry/registry"
 )
 
 func TestDefaultConfiguration(t *testing.T) {

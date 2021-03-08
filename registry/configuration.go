@@ -4,7 +4,7 @@ package registry
 type Configuration struct {
 	InitOnNew      bool     // indicates whether registry should be initialized from API on creation
 	SkipInitErrors bool     // indicates whether to ignore particular resource or object initialization errors
-	Sanitize       bool     // indicates whether objects and Resources description should be cleaned up on registry initialization
+	Sanitize       bool     // whether objects and Resources description should be cleaned up on registry init
 	Sanitizer      []string // strings that should be removed from resource and object description
 	// TODO add `Throttle` field to decrease load on OMAs API
 }

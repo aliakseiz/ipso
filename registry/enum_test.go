@@ -1,21 +1,25 @@
-package registry
+package registry_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/aliakseiz/ipso-registry/registry"
+)
 
 func TestInstanceType_String(t *testing.T) {
 	tests := []struct {
 		name string
-		e    InstanceType
+		e    registry.InstanceType
 		want string
 	}{
 		{
 			name: "Single instance",
-			e:    InstanceTypeSingle,
+			e:    registry.InstanceTypeSingle,
 			want: "Single",
 		},
 		{
 			name: "Multiple instances",
-			e:    InstanceTypeMultiple,
+			e:    registry.InstanceTypeMultiple,
 			want: "Multiple",
 		},
 	}
@@ -31,17 +35,17 @@ func TestInstanceType_String(t *testing.T) {
 func TestMandatoryType_String(t *testing.T) {
 	tests := []struct {
 		name string
-		e    MandatoryType
+		e    registry.MandatoryType
 		want string
 	}{
 		{
 			name: "Mandatory type",
-			e:    MandatoryTypeMandatory,
+			e:    registry.MandatoryTypeMandatory,
 			want: "Mandatory",
 		},
 		{
 			name: "Optional type",
-			e:    MandatoryTypeOptional,
+			e:    registry.MandatoryTypeOptional,
 			want: "Optional",
 		},
 	}
@@ -57,27 +61,27 @@ func TestMandatoryType_String(t *testing.T) {
 func TestOperationType_String(t *testing.T) {
 	tests := []struct {
 		name string
-		e    OperationType
+		e    registry.OperationType
 		want string
 	}{
 		{
 			name: "Read operation",
-			e:    OperationTypeRead,
+			e:    registry.OperationTypeRead,
 			want: "R",
 		},
 		{
 			name: "Write operation",
-			e:    OperationTypeWrite,
+			e:    registry.OperationTypeWrite,
 			want: "W",
 		},
 		{
 			name: "Read/write operations",
-			e:    OperationTypeReadWrite,
+			e:    registry.OperationTypeReadWrite,
 			want: "RW",
 		},
 		{
 			name: "Execute operation",
-			e:    OperationTypeExecute,
+			e:    registry.OperationTypeExecute,
 			want: "E",
 		},
 	}
@@ -93,37 +97,37 @@ func TestOperationType_String(t *testing.T) {
 func TestResourceType_String(t *testing.T) {
 	tests := []struct {
 		name string
-		e    ResourceType
+		e    registry.ResourceType
 		want string
 	}{
 		{
 			name: "Type boolean",
-			e:    ResourceTypeBoolean,
+			e:    registry.ResourceTypeBoolean,
 			want: "Boolean",
 		},
 		{
 			name: "Type string",
-			e:    ResourceTypeString,
+			e:    registry.ResourceTypeString,
 			want: "String",
 		},
 		{
 			name: "Type integer",
-			e:    ResourceTypeInteger,
+			e:    registry.ResourceTypeInteger,
 			want: "Integer",
 		},
 		{
 			name: "Type float",
-			e:    ResourceTypeFloat,
+			e:    registry.ResourceTypeFloat,
 			want: "Float",
 		},
 		{
 			name: "Type object link",
-			e:    ResourceTypeObjLink,
+			e:    registry.ResourceTypeObjLink,
 			want: "ObjLink",
 		},
 		{
 			name: "Type opaque",
-			e:    ResourceTypeOpaque,
+			e:    registry.ResourceTypeOpaque,
 			want: "Opaque",
 		},
 	}
@@ -139,22 +143,22 @@ func TestResourceType_String(t *testing.T) {
 func TestDifferenceType_String(t *testing.T) {
 	tests := []struct {
 		name string
-		e    DifferenceType
+		e    registry.DifferenceType
 		want string
 	}{
 		{
 			name: "Object added",
-			e:    DifferenceTypeNewObject,
+			e:    registry.DifferenceTypeNewObject,
 			want: "New object added",
 		},
 		{
 			name: "Object removed",
-			e:    DifferenceTypeObjectRemoved,
+			e:    registry.DifferenceTypeObjectRemoved,
 			want: "Object was removed",
 		},
 		{
 			name: "Unknown difference type",
-			e:    DifferenceTypeUnknown,
+			e:    registry.DifferenceTypeUnknown,
 			want: "Unknown reason",
 		},
 	}
