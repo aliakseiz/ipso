@@ -116,6 +116,11 @@ func TestResourceType_String(t *testing.T) {
 			want: "Integer",
 		},
 		{
+			name: "Type unsigned integer",
+			e:    registry.ResourceTypeUnsignedInteger,
+			want: "Unsigned Integer",
+		},
+		{
 			name: "Type float",
 			e:    registry.ResourceTypeFloat,
 			want: "Float",
@@ -123,12 +128,27 @@ func TestResourceType_String(t *testing.T) {
 		{
 			name: "Type object link",
 			e:    registry.ResourceTypeObjLink,
-			want: "ObjLink",
+			want: "Objlnk",
+		},
+		{
+			name: "Type core link",
+			e:    registry.ResourceTypeCoreLink,
+			want: "Corelnk",
 		},
 		{
 			name: "Type opaque",
 			e:    registry.ResourceTypeOpaque,
 			want: "Opaque",
+		},
+		{
+			name: "Type time",
+			e:    registry.ResourceTypeTime,
+			want: "Time",
+		},
+		{
+			name: "Type none (executable)",
+			e:    registry.ResourceTypeNone,
+			want: "none",
 		},
 	}
 	for _, tt := range tests {

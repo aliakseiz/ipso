@@ -33,6 +33,8 @@ type Registry interface {
 	FindResourcesByObjResIDs(objID, resID int32) ([]Resource, error)
 	FindResourceByObjIDObjVerResID(objID int32, objVer string, resID int32) (Resource, error)
 
+	GetObjects() []Object
+
 	Sanitize(sanitizer []string)
 
 	GetRegistry() *Reg
@@ -46,15 +48,7 @@ type Reg struct {
 	objIDVerMap map[int32]map[string]*Object // First key - ObjectID, second - Version
 }
 
-// TODO implement tests for registry
-// Export
-// Import
-// ImportFromAPI
-// Compare
-// Sanitize
-// Find
-
-// New creates a new registry, using provided or default configuration.
+// New create a new registry, using provided or default configuration.
 func New(cfg Configuration) (Registry, error) {
 	reg := Reg{
 		Config:  cfg,
@@ -79,8 +73,16 @@ func New(cfg Configuration) (Registry, error) {
 	return &reg, nil
 }
 
-// Import loads objects and resources from file.
-// Overwrites current registry objects and resources.
+// TODO implement tests for registry
+// Export
+// Import
+// ImportFromAPI
+// Compare
+// Sanitize
+// Find
+
+// Import load objects and resources from file.
+// Overwrite current registry objects and resources.
 func (r *Reg) Import(filename string) error {
 	if filename == "" {
 		return errEmptyFilename
@@ -100,9 +102,9 @@ func (r *Reg) Import(filename string) error {
 	return nil
 }
 
-// ImportFromAPI initializes the registry from official OMA API.
-// Overwrites current registry objects and resources.
-// Fills empty object and LwM2M versions with default values "1.0".
+// ImportFromAPI initialize the registry from official OMA API.
+// Overwrite current registry objects and resources.
+// Fill empty object and LwM2M versions with default values "1.0".
 func (r *Reg) ImportFromAPI() ([]Object, error) {
 	objectsMeta, err := r.getObjectsMeta()
 	if err != nil {
@@ -136,7 +138,7 @@ func (r *Reg) ImportFromAPI() ([]Object, error) {
 	return objects, nil
 }
 
-// Export stores registry objects and resources in a specified file in YAML format.
+// Export store registry objects and resources in a specified file in YAML format.
 func (r *Reg) Export(filename string) error {
 	if filename == "" {
 		return errEmptyFilename
@@ -150,8 +152,8 @@ func (r *Reg) Export(filename string) error {
 	return ioutil.WriteFile(filename, data, 0o600)
 }
 
-// Compare makes comparison of r and reg registries.
-// Returns a list of non-equal objects with difference explanation.
+// Compare r and reg registries.
+// Return a list of non-equal objects with difference explanation.
 func (r *Reg) Compare(reg *Reg) []ObjectComparison {
 	var objComp []ObjectComparison
 
@@ -203,8 +205,8 @@ func (r *Reg) Compare(reg *Reg) []ObjectComparison {
 	return objComp
 }
 
-// Find looks for an object in the current registry.
-// Returns an empty object and error, when the object not found.
+// Find look for an object in the current registry.
+// Return an empty object and error, when the object not found.
 func (r *Reg) Find(o Object) (Object, error) {
 	if objVerMap, ok := r.objIDVerMap[o.ObjectID]; ok {
 		if obj, ok := objVerMap[o.ObjectVersion]; ok {
@@ -215,9 +217,9 @@ func (r *Reg) Find(o Object) (Object, error) {
 	return Object{}, errObjNotFound
 }
 
-// FindObjectsByID finds objects in the registry by ID.
+// FindObjectsByID find objects in the registry by ID.
 // Multiple objects with same ID and different versions could be returned.
-// Returns an error, when no objects found.
+// Return an error, when no objects found.
 func (r *Reg) FindObjectsByID(id int32) ([]Object, error) {
 	var objects []Object
 
@@ -232,10 +234,8 @@ func (r *Reg) FindObjectsByID(id int32) ([]Object, error) {
 	return objects, nil
 }
 
-// TODO implement `FindObjectByName`, `FindResourceByName`, `FindObjectByDescription`, `FindResourceByDescription`
-
-// FindObjectByIDAndVer finds an object in the registry by ID and version.
-// Returns an empty object and error, when the object not found.
+// FindObjectByIDAndVer find an object in the registry by ID and version.
+// Return an empty object and error, when the object not found.
 func (r *Reg) FindObjectByIDAndVer(id int32, ver string) (Object, error) {
 	if objVerMap, ok := r.objIDVerMap[id]; ok {
 		if obj, ok := objVerMap[ver]; ok {
@@ -246,9 +246,11 @@ func (r *Reg) FindObjectByIDAndVer(id int32, ver string) (Object, error) {
 	return Object{}, errObjNotFound
 }
 
-// FindResourcesByID finds resources in registry by ID.
-// Returns matching resources from all objects of all versions.
-// Returns an error, when resource not found.
+// TODO implement `FindObjectByName`, `FindResourceByName`, `FindObjectByDescription`, `FindResourceByDescription`
+
+// FindResourcesByID find resources in registry by ID.
+// Return matching resources from all objects of all versions.
+// Return an error, when resource not found.
 func (r *Reg) FindResourcesByID(id int32) ([]Resource, error) {
 	var resources []Resource
 
@@ -267,9 +269,9 @@ func (r *Reg) FindResourcesByID(id int32) ([]Resource, error) {
 	return resources, nil
 }
 
-// FindResourcesByObjResIDs finds resources in registry by object ID and resource ID.
-// Returns matching resources from all versions of specific object.
-// Returns an error, when resource or object not found.
+// FindResourcesByObjResIDs find resources in registry by object ID and resource ID.
+// Return matching resources from all versions of specific object.
+// Return an error, when resource or object not found.
 func (r *Reg) FindResourcesByObjResIDs(objID, resID int32) ([]Resource, error) {
 	var resources []Resource
 
@@ -293,9 +295,9 @@ func (r *Reg) FindResourcesByObjResIDs(objID, resID int32) ([]Resource, error) {
 	return resources, nil
 }
 
-// FindResourceByObjIDObjVerResID finds specific resource in registry by object ID, object version and resource ID.
-// Returns a single matching resource of specific object.
-// Returns an empty resource and error, when resource or object not found.
+// FindResourceByObjIDObjVerResID find specific resource in registry by object ID, object version and resource ID.
+// Return a single matching resource of specific object.
+// Return an empty resource and error, when resource or object not found.
 func (r *Reg) FindResourceByObjIDObjVerResID(objID int32, objVer string, resID int32) (Resource, error) {
 	obj, err := r.FindObjectByIDAndVer(objID, objVer)
 	if err != nil {
@@ -311,10 +313,15 @@ func (r *Reg) FindResourceByObjIDObjVerResID(objID int32, objVer string, resID i
 	return Resource{}, errResNotFound
 }
 
+// GetObjects return all objects from registry.
+func (r *Reg) GetObjects() []Object {
+	return r.Objects
+}
+
 // Sanitize removes unwanted strings from objects and resources description fields
 // using sanitizer strings from registry configuration. Also removes leading and trailing spaces.
 // Description fields in objects and resources do not follow any single format or convention
-// with regards to line breaks, lists presentation, special characters escaping etc.
+// in regard to line breaks, lists presentation, special characters escaping etc.
 // thus in some cases cannot be used directly in external applications (i.e. properly displayed in browser).
 func (r *Reg) Sanitize(sanitizer []string) {
 	// TODO implement sanitization using regular expressions

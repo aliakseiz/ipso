@@ -5083,6 +5083,71 @@
           rangeenumeration: ""
           units: ""
           description: 'False: attach with PDN connectionTrue: attach without PDN connection'
+- Name: LWM2M Software Component
+  Description1: If some Objects are not supported after software update, the LwM2M Client MUST delete all the Object Instances of the Objects that are not supported.
+  Description2: ""
+  ObjectID: 14
+  ObjectURN: urn:oma:lwm2m:oma:14
+  LWM2MVersion: "1.0"
+  ObjectVersion: "1.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: Component Identity
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: 0..255 bytes
+          units: ""
+          description: Name or identifier of the software component
+        - id: 1
+          name: Component Pack
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: Software components is stored in this resource
+        - id: 2
+          name: Component Version
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: 0..255 bytes
+          units: ""
+          description: Version of the software component.
+        - id: 3
+          name: Activate
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: This action activates the software previously successfully installed (the SW Update Package Installation State Machine is currently in the INSTALLED state).
+        - id: 4
+          name: Deactivate
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: This action deactivates software if the SW Update Package Installation State Machine is currently in the INSTALLED state.
+        - id: 5
+          name: Activation State
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Boolean
+          rangeenumeration: ""
+          units: ""
+          description: 'Indicates the current activation state of this software component:0: DISABLEDActivation State is DISABLED if the Software Component Activation State Machine is in the INACTIVE state or not alive.1: ENABLEDActivation State is ENABLED only if the Software Component Activation State Machine is in the ACTIVE state.'
 - Name: DevCapMgmt
   Description1: This LWM2M Object is dedicated to manage the device capabilities of a device e.g. sensors, communication, etc.
   Description2: ""
@@ -5571,6 +5636,82 @@
           rangeenumeration: ""
           units: ""
           description: This resource MUST be used to store an OSCORE identifier called ID Context. This identifier is used to identify the Common Context and derive the security context used by OSCORE.
+- Name: LWM2M OSCORE
+  Description1: |-
+    This LwM2M Object provides the keying material and related information of a LwM2M Client appropriate to access a specified LwM2M Server using OSCORE. One Object Instance MAY address a LwM2M Bootstrap-Server. These LwM2M Object Resources MUST only be changed by a LwM2M Bootstrap-Server or Bootstrap from Smartcard and MUST NOT be accessible by any other LwM2M Server.
+    Instances of this Object are linked from Instances of Object 0 using the OSCORE Security Mode Resource of Object 0. Instances of this Object MUST NOT be linked from more than one Instance of Object 0.
+  Description2: ""
+  ObjectID: 21
+  ObjectURN: urn:oma:lwm2m:oma:21:2.0
+  LWM2MVersion: "1.1"
+  ObjectVersion: "2.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: OSCORE Master Secret
+          operations: ""
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: This resource MUST be used to store the pre-shared key used in LwM2M Client and LwM2M Server/Bootstrap-Server, called the Master Secret.
+        - id: 1
+          name: OSCORE Sender ID
+          operations: ""
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: This resource MUST store an OSCORE identifier for the LwM2M Client called the Sender ID.
+        - id: 2
+          name: OSCORE Recipient ID
+          operations: ""
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: This resource MUST store an OSCORE identifier for the LwM2M Client called the Recipient ID.
+        - id: 3
+          name: 'OSCORE AEAD Algorithm '
+          operations: ""
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: This resource MUST be used to store the encoding of the AEAD Algorithm as defined in Table 10 of RFC 8152. The AEAD is used by OSCORE for encryption and integrity protection of CoAP message fields.
+        - id: 4
+          name: 'OSCORE HMAC Algorithm '
+          operations: ""
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: This resource MUST be used to store the encoding of the HMAC Algorithm used in the HKDF. The encoding of HMAC algorithms are defined in Table 7 of RFC 8152. The HKDF is used to derive the security context used by OSCORE.
+        - id: 5
+          name: OSCORE Master Salt
+          operations: ""
+          multipleinstances: Single
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: This resource MUST be used to store a non-secret random value called the Master Salt. The Master Salt is used to derive the security context used by OSCORE.
+        - id: 6
+          name: ' OSCORE ID Context'
+          operations: ""
+          multipleinstances: Single
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: This resource MUST be used to store an OSCORE identifier called ID Context. This identifier is used to identify the Common Context and derive the security context used by OSCORE.
 - Name: Virtual Observe Notify
   Description1: The Virtual Observe Notify Object provides a main function to notify multiple resources to a LwM2M Server in one notification message whether the resources are in one object/object instance or across multiple objects. The Virtual Observe Notify Object also provides some functions to implement more efficient multi-resource report.
   Description2: |-
@@ -5630,6 +5771,83 @@
           rangeenumeration: ""
           units: ""
           description: 'Used by the server to indicate the AND/OR logic relationship combination between or among resources included in ObserveLinks Resource.0: OR 1: AND 2: reserved value.'
+- Name: Virtual Observe Notify
+  Description1: The Virtual Observe Notify Object provides a main function to notify multiple resources to a LwM2M Server in one notification message whether the resources are in one object/object instance or across multiple objects. The Virtual Observe Notify Object also provides some functions to implement more efficient multi-resource report.
+  Description2: |-
+    Notes:
+    (1)	When the ResourceFilter is set to TRUE, this condition takes precedence over any pmax. Namely, when the LwM2M Server set the Resource ResourceFilter to TRUE, whatever the pmax attribute is attached to any resource included in the ObserveLinks, the Report is only populated by the LwM2M Client each time the resources included in the ObserveLinks are changed.
+    (2)	Any default pmax and pmin values which have been configured in the Server Object should not apply to VirtualObserveNotify and each instance of this object should use explicit pmin and pmax as requested by the LwM2M Server when setting up notifications.
+  ObjectID: 22
+  ObjectURN: urn:oma:lwm2m:oma:22:1.1
+  LWM2MVersion: "1.1"
+  ObjectVersion: "1.1"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: ObserveLinks
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Mandatory
+          type: Corelnk
+          rangeenumeration: ""
+          units: ""
+          description: Array of Core Links where each element includes a Resource ID or Object Instance ID to be observed and its observation criteria (lt, gt, st, pmin, pmax).When the LwM2M Server write the resources or object instances to this Resource, the LwM2M Client starts to observe these resources.When the LwM2M Server write empty string to this Resource, the LwM2M Client stop to observe resources.
+        - id: 1
+          name: Report
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: This resource is populated by the LwM2M Client each time an observed resource from ObserveLinks meets its observation criteria, thereby resulting in a notification to a LwM2M Server that is observing Report resource. The type MUST be SenML JSON
+        - id: 2
+          name: ResourceFilter
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Boolean
+          rangeenumeration: ""
+          units: ""
+          description: 'Used by the LwM2M Server to indicate the LwM2M Client whether send all or changed resources.False: report all Resources,True: report only changed Resources.When it is absent, the LwM2M Client shall report all Resources as default.'
+        - id: 3
+          name: ReportLinks
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Corelnk
+          rangeenumeration: ""
+          units: ""
+          description: Array of Core Links where each element includes the Resources ID to be included in the notification.If ReportLinks Resource is absent, the notification sent to the LwM2M Server will only include the Resources in ObserveLinks.If the ReportLinks Resource is present, the notification sent to the LwM2M Server will only include the Resources that are listed in ReportLinks and not include the value of the Resource ObserveLinks.To provide maximum flexibility to the server the Notifications will not comprise the union of resources in ObserveLinks and ReportLinks when both present.
+        - id: 4
+          name: ObserveRelation
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: 'Used by the server to indicate the AND/OR logic relationship combination between or among resources included in ObserveLinks Resource.0: OR1: AND2: reserved value.'
+        - id: 5
+          name: Virtual Observe Report Format
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: If present, it specifies the content format LwM2M Client will use to populate Virtual Observe Report Resource.Values will be either as per Tables 7.4.1 and 7.4.2 of LwM2M Core TS or another IANA registered Media Type. Default value of SenML JSON is assumed when this resource is not present.
+        - id: 6
+          name: Virtual Observe Report
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: If present this resource is populated by the LwM2M Client following exactly the same rules as those used to populate Resource 4, Report Resource.The only difference is that this resource is formatted as defined by Resource 5
 - Name: LwM2M COSE
   Description1: This Object provides the keying material and related information for use with COSE.
   Description2: ""
@@ -5798,6 +6016,44 @@
           rangeenumeration: ""
           units: ""
           description: This resource links to the Object Instance in the LwM2M Routing Object.
+- Name: LwM2M Gateway
+  Description1: This object is used by a LwM2M Gateway to maintain the IoT Devices connected to the LwM2M Gateway.
+  Description2: ""
+  ObjectID: 25
+  ObjectURN: urn:oma:lwm2m:oma:25:2.0
+  LWM2MVersion: "1.1"
+  ObjectVersion: "2.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: Device ID
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: This resource identifies the IoT Device connected to the LwM2M Gateway.
+        - id: 1
+          name: Prefix
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: This resource defines what prefix MUST be used for access to LwM2M Objects of this IoT Device.
+        - id: 3
+          name: IoT Device Objects
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Corelnk
+          rangeenumeration: ""
+          units: ""
+          description: This resource contains the Objects and Object Instances exposed by the LwM2M Gateway on behalf of the IoT Device. It uses the same CoreLnk format as Registration Interface.
 - Name: LwM2M Gateway Routing
   Description1: This object is used by a LwM2M Gateway to maintain the routing table.
   Description2: ""
@@ -6027,6 +6283,89 @@
           rangeenumeration: ""
           units: ""
           description: Indicates the Access Type preference for 5G SA (FDD/TDD) Cellular Network.0 = 3GPP1 = Non-3GPP
+- Name: Device RF Capabilities
+  Description1: This is a device management object that should be used for capturing the RF capabilities of the device.
+  Description2: ""
+  ObjectID: 28
+  ObjectURN: urn:oma:lwm2m:oma:28
+  LWM2MVersion: "1.1"
+  ObjectVersion: "1.0"
+  MultipleInstances: Single
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: Supported LTE Band Information
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Indicates the list of supported LTE bands
+        - id: 1
+          name: Supported EGPRS Band Information
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Indicates the list of supported EGPRS bands
+        - id: 2
+          name: Supported TD-SCDMA Band Information
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Indicates the list of supported TD-SCDMA bands
+        - id: 3
+          name: Supported WCDMA Band Information
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Indicates the list of supported WCDMA bands
+        - id: 4
+          name: Supported CDMA-2000 Band Information
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Indicates the list of supported CDMA-2000 bands
+        - id: 5
+          name: Supported WiMAX Band Information
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Indicates the list of supported WiMAX bands
+        - id: 6
+          name: Supported NB-IoT Band Information
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Indicates the list of supported NB-IoT bands
+        - id: 7
+          name: Supported 5G Band Information
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Indicates the list of supported 5G-NR bands
 - Name: CoAP Config
   Description1: "\n            This object is used to configure the CoAP transmission parameters (RFC7252) and other parameters that affect CoAP transmission.\n        "
   Description2: ""
@@ -6719,6 +7058,518 @@
           rangeenumeration: ""
           units: m
           description: Altitude above sea level in meters.
+- Name: Remote SIM Provisioning
+  Description1: This is a device management object that should be used for Remote SIM Provisioning according to GSMA standards
+  Description2: ""
+  ObjectID: 504
+  ObjectURN: urn:oma:lwm2m:oma:504
+  LWM2MVersion: "1.0"
+  ObjectVersion: "1.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: Current SIM Type
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..3
+          units: ""
+          description: 'Provides the information about the currently being used SIM Type:0: UICC (removable)1: eUICC (removable)2: eUICC (non-removable)3: iUICC4-24: Reserved for future use'
+        - id: 1
+          name: Supported SIM Type
+          operations: R
+          multipleinstances: Multiple
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..3
+          units: ""
+          description: 'Provides the information about the currently supported SIM Types: 0: UICC (removable)1: eUICC (removable)2: eUICC (non-removable)3: iUICC4-24: Reserved for future use'
+        - id: 2
+          name: Service Provider Name
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Provides the name of the Service Provider assocatiated with the downloaded profile or the profile currently being downloaded.
+        - id: 3
+          name: Download URI/Information
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: 0..255
+          units: ""
+          description: URI, or formatted data containing the URI (e.g. GSMA SGP.22 Activation Code), from where the device can download the profile package by an alternative mechanism. The URI format is defined in RFC 3986.
+        - id: 4
+          name: RSP Update
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: 'Executes one or more RSP actions. The actions are given as arguments and in case providing multiple actions comma separation is used, e.g. 0,1,2. The following values are possible:0: Download & install profile1: Enable profile - for profile identified by resource 142: Disable profile - for profile identified by resource 143: Delete profile - for profile identified by resource 144: Reset memory of current SIM5-24: Reserved for future use'
+        - id: 5
+          name: RSP Update State
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 0..10
+          units: ""
+          description: 'Indicates current state with respect to the executed RSP action(s) in the RSP update resource. This value is set by the LwM2M Client.0: Idle (before downloading a profile or after successful completetion of the action(s))1: Downloading (The data sequence is on the way)2: Downloaded profile ready for installation3: Installing5: Enabling6: Disabling7: Deleting8: Resetting memory9: Pending end-user consent10: Pending confirmation code11-24: Reserved for future use'
+        - id: 6
+          name: RSP Update Result
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 0..16
+          units: ""
+          description: 'Contains the result of the executed RSP action(s) in the RSP update resource.0: Initial value. Once the updating process is initiated (Download /Update), this Resource MUST be reset to Initial value. 1: RSP action completed successfully.2: Not enough SIM memory for the new Profile package. 3. Out of RAM during downloading process. 4: Connection lost during downloading process.5: Integrity check failure for new downloaded profile package. 6: Unsupported profile package type. 7: Invalid URI8: Unsupported protocol.9: Not authorized to download profile at the given URI.10: Failed to authenticate server given by the URI.11: Generic download and installation error.12: Error in profile package format13: Failed to enable profile.14: Failed to disable profile.15: Failed to delete profile.16: Failed to reset memory.17-24: Reserved for future use'
+        - id: 7
+          name: Profile Name
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: 0..255
+          units: ""
+          description: Name of the downloaded profile / profile package or the profile / profile package currently being downloaded.
+        - id: 8
+          name: Profile Package Version
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: 0..255
+          units: ""
+          description: Version of the downloaded profile / profile package or the profile / profile package currently being downloaded.
+        - id: 9
+          name: Free Memory on SIM
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: KiB
+          description: Estimated current available amount of storage space on SIM which can store data and software in the LwM2M Device (expressed in kibibytes).
+        - id: 10
+          name: Total Memory on SIM
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: KiB
+          description: Total amount of storage space which can store data and software in the LwM2M Device
+        - id: 11
+          name: Integrated Circuit Card Identifier (ICCID)
+          operations: R
+          multipleinstances: Multiple
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: This resource provides the unique identification number for each installed profile of the current SIM in case of RSP support orthe unique identification number of the current SIM in case of current SIM being a UICC with no RSP support. Please refer ETSI TS 102.22.1. In case of multiple installed profiles,the currently active profile is the first instance.
+        - id: 12
+          name: eUICC ID
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: eUICC-ID (a.k.a. EID), see GSMA SGP.02 and GSMA SGP.29 for definitions
+        - id: 13
+          name: RSP Type
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: 'Provides the information about the Remote SIM Provisioning (RSP) type of the current SIM:0: No RSP support1: GSMA eSIM for M2M devices2: GSMA eSIM for consumer devices3-24: Reserved for future use'
+        - id: 14
+          name: Selected ICCID for RSP operation
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Indicates ICCID of profile selected for profile specific RSP operations. This resource must be present if multiple installed profiles is supportedby the RSP implementation. In case of only support for a single profile at a time this resource is not required to be present for profile selection. After successful installation ofa profile the value of this resource (if present) is updated to the ICCID of the installed profile.
+        - id: 15
+          name: RSP Consent Reason
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Provides information on the requested user consent
+        - id: 16
+          name: RSP User Consent
+          operations: W
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 0..1
+          units: ""
+          description: 'User consent decision. The following values are possible:0: Approved1: Rejected2-24: Reserved for future use'
+        - id: 17
+          name: RSP Confirmation Code
+          operations: W
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Provides a confirmation code (see e.g. GSMA SGP.21/22)
+        - id: 18
+          name: RSP Data Type
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 0..17
+          units: ""
+          description: 'RSP data type for set and get RSP data:0: SM-DP+ default address (see GSMA SGP.22)1: eUICCInfo2 (see GSMA SGP.22)2: DeviceInfo (see GSMA SGP.22)3: eSIM Profile Metadata (GSMA SGP.22 ProfileInfo default data for all installed profiles)5: ISD-P AID (see GSMA SGP.22) - for profile identified by resource 146: Profile state (see GSMA SGP.22) - for profile identified by resource 147: Profile Nickname (see GSMA SGP.22) - for profile identified by resource 148: Service provider name (see GSMA SGP.22) - for profile identified by resource 149: Profile name (see GSMA SGP.22) - for profile identified by resource 1410: Icon type (see GSMA SGP.22) - for profile identified by resource 1411: Icon (see GSMA SGP.22) - for profile identified by resource 1412: Profile Class (see GSMA SGP.22) - for profile identified by resource 1413: Notification Configuration Info (see GSMA SGP.22) - for profile identified by resource 1414: Profile Owner (see GSMA SGP.22) - for profile identified by resource 1415: SM-DP+ proprietary data (see GSMA SGP.22) - for profile identified by resource 1416: Profile Policy Rules (see GSMA SGP.22) - for profile identified by resource 1417: RSP formatted data request/response (RSP type specific)18-24: Reserved for future use'
+        - id: 19
+          name: Set RSP Data
+          operations: W
+          multipleinstances: Single
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: This resource is used to update the (e/i)UICC data / profile specific data of type according to resource 30.It is up to the RSP type whether update of the data is possible or not.
+        - id: 20
+          name: Get RSP Data
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: This resource is used to retrieve the (e/i)UICC data / profile specific data of type according to resource 30.It is up to the RSP type whether retrieval of the data is possible or not.
+- Name: LwM2M SIM Provisioning
+  Description1: This is a device management object that should be used for Remote SIM Provisioning from a LwM2M server.
+  Description2: ""
+  ObjectID: 505
+  ObjectURN: urn:oma:lwm2m:oma:505
+  LWM2MVersion: "1.0"
+  ObjectVersion: "1.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: Current SIM Type
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..3
+          units: ""
+          description: 'Provides the information about the currently being used SIM Type:0: UICC (removable)1: eUICC (removable)2: eUICC (non-removable)3: iUICC'
+        - id: 1
+          name: Supported SIM Type
+          operations: R
+          multipleinstances: Multiple
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..3
+          units: ""
+          description: 'Provides the information about the currently supported SIM Types: 0: UICC (removable)1: eUICC (removable)2: eUICC (non-removable)3: iUICC'
+        - id: 2
+          name: Service Provider Name
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Provides the Service Provider Name using which LwM2M is currently communicating to the Server.
+        - id: 3
+          name: Profile Package
+          operations: W
+          multipleinstances: Single
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: Profile Package is a personalised Profile using an interoperable description format that is transmitted to an eUICC to load and install a Profile.
+        - id: 4
+          name: Profile URI
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: 0..255
+          units: ""
+          description: URI from where the device can download the profile package by an alternative mechanism. As soon the device has received the Profile package URI it performs the download at the next practical opportunity. The URI format is defined in RFC 3986. For example, coaps://example.org/profile is a syntactically valid URI. The URI scheme determines the protocol to be used. For CoAP this endpoint MAY be a LwM2M Server but does not necessarily need to be. A CoAP server implementing block-wise transfer is sufficient as a server hosting a firmware repository and the expectation is that this server merely serves as a separate file server making profile images available to LwM2M Clients. This server can be the future carrier server as well from which IoT devices would like to use the service.
+        - id: 5
+          name: Update Profile
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: Updates profile by using the profile package stored in Package, or, by using the profile downloaded from the Package URI. This Resource is only executable when the value of the State Resource is Downloaded.
+        - id: 6
+          name: Update State
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..3
+          units: ""
+          description: 'Indicates current state with respect to this profile update. This value is set by the LwM2M Client. 0: Idle (before downloading or after successful updating) 1: Downloading (The data sequence is on the way) 2: Downloaded 3: Updating If writing the profile package to Package Resource is done, or, if the device has downloaded the profile package from the Package URI the state changes to Downloaded. Writing an empty string to Package URI Resource or setting the Package Resource to NULL (â€˜0â€™), resets the Profile Update State Machine: the State Resource value is set to Idle and the Update Result Resource value is set to 0. When in Downloaded state, and the executable Resource Update is triggered, the state changes to Updating. If the Update Resource failed, the state returns at Downloaded. If performing the Update Resource was successful, the state changes from Updating to Idle.'
+        - id: 7
+          name: Update Result
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..8
+          units: ""
+          description: 'Contains the result of downloading or updating the Profile 0: Initial value. Once the updating process is initiated (Download /Update), this Resource MUST be reset to Initial value. 1: Profile updated successfully, 2: Not enough SIM memory for the new Profile package. 3. Out of RAM during downloading process. 4: Connection lost during downloading process. 5: Integrity check failure for new downloaded package. 6: Unsupported package type. 7: Invalid URI8: Unsupported protocol. A LwM2M client indicates the failure to retrieve the Profile using the URI provided in the Package URI resource by writing the value 9 to the /x/0/7 (Update Result resource) when the URI contained a URI scheme unsupported by the client. Consequently, the LwM2M Client is unable to retrieve the Profile using the URI provided by the LwM2M Server in the Package URI when it refers to an unsupported protocol.'
+        - id: 8
+          name: Profile Name
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: 0..255
+          units: ""
+          description: Name of the Profile Package.
+        - id: 9
+          name: Profile Package Version
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: 0..255
+          units: ""
+          description: Version of the Profile package.
+        - id: 10
+          name: Profile Update Protocol Support
+          operations: R
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 0..3
+          units: ""
+          description: 'This resource indicates what protocols the LwM2M Client implements to retrieve Profiles. The LwM2M server uses this information to decide what URI to include in the Package URI. A LwM2M Server MUST NOT include a URI in the Package URI object that uses a protocol that is unsupported by the LwM2M client. For example, if a LwM2M client indicates that it supports CoAP and CoAPS then a LwM2M Server must not provide an HTTP URI in the Packet URI. The following values are defined by this version of the specification: 0: CoAP (as defined in RFC 7252) with the additional support for block-wise transfer. CoAP is the default setting. 1: CoAPS (as defined in RFC 7252) with the additional support for block-wise transfer 2: HTTP 1.1 (as defined in RFC 7230) 3: HTTPS 1.1 (as defined in RFC 7230) Additional values MAY be defined in the future. Any value not understood by the LwM2M Server MUST be ignored.'
+        - id: 11
+          name: Profile Update Delivery Method
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..2
+          units: ""
+          description: 'The LwM2M Client uses this resource toindicate its support for transferring Profileimages to the client either via the PackageResource (=push) or via the Package URIResource (=pull) mechanism.0: Pull only1: Push only2: Both. In this case the LwM2M ServerMAY choose the preferred mechanism forconveying the profile image to theLwM2M Client.'
+        - id: 12
+          name: Free Memory on SIM
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: KiB
+          description: Estimated current available amount of storage space on SIM which can store data and software in the LwM2M Device (expressed in kibibytes).
+        - id: 13
+          name: Total Memory on SIM
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: KiB
+          description: Total amount of storage space which can store data and software in the LwM2M Device.
+        - id: 14
+          name: Integrated Circuit Card Identifier (ICCID)
+          operations: R
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: This Elementary File (EF) provides a unique identification number for the UICC/Smart Cards. Please refer ETSI TS 102.22.1.
+        - id: 15
+          name: eUICC ID
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: eUICC-ID (a.k.a. EID), see GSMA SGP.02 and GSMA SGP.29 for definitions.
+        - id: 16
+          name: Profile Type
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Free optional text produced by the SM-DP+ server. This is equivalent to the "Profile Description ID" as described in Annex B of SGP.21.
+- Name: nuSIM Profile
+  Description1: This device management object contains the elements of a nuSIM profile package according to nuSIM Technical Specification NTS.01.
+  Description2: ""
+  ObjectID: 507
+  ObjectURN: urn:oma:lwm2m:oma:507
+  LWM2MVersion: "1.0"
+  ObjectVersion: "1.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: encP
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Encrypted nuSIM profile
+        - id: 1
+          name: mac
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: MAC value of encrypted nuSIM profile
+        - id: 2
+          name: eKpubDP
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Ephemeral DP public key
+        - id: 3
+          name: SigEKpubDP
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Signature of eKpubDP created with KpubDP
+        - id: 4
+          name: KpubDP
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: nuSIM DP public key
+        - id: 5
+          name: SigKpubDP
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Signature of KpubDP created with KpubCI
+        - id: 6
+          name: KpubCl
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: nuSIM CI public key
+- Name: nuSIM
+  Description1: This device management object represents a nuSIM integrated SIM according to NTS.01 - nuSIM Integrated SIM Specification.
+  Description2: ""
+  ObjectID: 508
+  ObjectURN: urn:oma:lwm2m:oma:508
+  LWM2MVersion: "1.0"
+  ObjectVersion: "1.0"
+  MultipleInstances: Single
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: EID
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Contains the unique identifier of the nuSIM.
+        - id: 1
+          name: ICCID
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Contains the ICCID of the currently loaded nuSIM profile.
+        - id: 2
+          name: nuSIM Capabilities
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: Contains the supported nuSIM specification version and optional capabilities of the nuSIM.
+        - id: 3
+          name: nuSIM Cert
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Contains the individual nuSIM certificate CERT.NUSIM.ECDSA, if available.
+        - id: 4
+          name: nuSIM Profile
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Objlnk
+          rangeenumeration: ""
+          units: ""
+          description: Points to an instance of the nuSIM profile object which is to be loaded by executing Load Profile, see Resource 5.
+        - id: 5
+          name: Load Profile
+          operations: E
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: Loads the profile instance referenced in Resource 4 to nuSIM.
+        - id: 6
+          name: Load Profile Result
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..255
+          units: ""
+          description: 'Contains the result of the last Load Profile operation: 0=successful, 1=not successful, other values are implementation-specific.'
 - Name: CmdhPolicy
   Description1: This Object provides links to a set of rules associated with a specific CSE that governs the behavior of that CSE regarding rejecting, buffering and sending request or response messages via the Mcc reference point.
   Description2: ""
@@ -14606,6 +15457,89 @@
           rangeenumeration: ""
           units: ""
           description: The application type of the sensor or actuator as a string depending on the use case.
+        - id: 6050
+          name: Fractional Timestamp
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Float
+          rangeenumeration: 0..1
+          units: s
+          description: Fractional part of the timestamp when sub-second precision is used (e.g., 0.23 for 230 ms).
+        - id: 6042
+          name: Measurement Quality Indicator
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 0..23
+          units: ""
+          description: 'Measurement quality indicator reported by a smart sensor. 0: UNCHECKED No quality checks were done because they do not exist or can not be applied. 1: REJECTED WITH CERTAINTY The measured value is invalid. 2: REJECTED WITH PROBABILITY The measured value is likely invalid. 3: ACCEPTED BUT SUSPICIOUS The measured value is likely OK. 4: ACCEPTED The measured value is OK. 5-15: Reserved for future extensions. 16-23: Vendor specific measurement quality.'
+        - id: 6049
+          name: Measurement Quality Level
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 0..100
+          units: ""
+          description: Measurement quality level reported by a smart sensor. Quality level 100 means that the measurement has fully passed quality check algorithms. Smaller quality levels mean that quality has decreased and the measurement has only partially passed quality check algorithms. The smaller the quality level, the more caution should be used by the application when using the measurement. When the quality level is 0 it means that the measurement should certainly be rejected.
+- Name: Location
+  Description1: "This IPSO object represents GPS coordinates. This object is compatible with the LwM2M management object for location, but uses reusable resources.\n        "
+  Description2: ""
+  ObjectID: 3336
+  ObjectURN: urn:oma:lwm2m:ext:3336:2.0
+  LWM2MVersion: "1.0"
+  ObjectVersion: "2.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 6051
+          name: Numeric Latitude
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Float
+          rangeenumeration: ""
+          units: lat
+          description: The decimal notation of latitude, e.g. -43.5723 (World Geodetic System 1984).
+        - id: 6052
+          name: Numeric Longitude
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Float
+          rangeenumeration: ""
+          units: lon
+          description: The decimal notation of longitude, e.g. 153.21760 (World Geodetic System 1984).
+        - id: 6053
+          name: Numeric Uncertainty
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Float
+          rangeenumeration: ""
+          units: m
+          description: The accuracy of the position in meters.
+        - id: 5705
+          name: Compass Direction
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Float
+          rangeenumeration: 0..360
+          units: deg
+          description: The measured compass direction.
+        - id: 5517
+          name: Velocity
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: The velocity of the device as defined in 3GPP 23.032 GAD specification. This set of values may not be available if the device is static.
         - id: 5518
           name: Timestamp
           operations: R
@@ -14615,6 +15549,15 @@
           rangeenumeration: ""
           units: ""
           description: The timestamp of when the measurement was performed.
+        - id: 5750
+          name: Application Type
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: The application type of the sensor or actuator as a string depending on the use case.
         - id: 6050
           name: Fractional Timestamp
           operations: R
@@ -24348,6 +25291,424 @@
           rangeenumeration: ""
           units: ""
           description: Set to True if the device can’t support the condition.
+- Name: LwM2M v1.0 Test Object
+  Description1: This object is for use in interoperability tests of the LwM2M v1.0 technical specification. It contains resources for each available datatype.
+  Description2: ""
+  ObjectID: 3441
+  ObjectURN: urn:oma:lwm2m:ext:3441
+  LWM2MVersion: "1.0"
+  ObjectVersion: "1.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: Reset values
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: Reset all resources of this object with their initial value.
+        - id: 1
+          name: Randomize values
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: Set random value to all resources. For multi-instance resources, the number of resource instances is also randomized.Randomization should avoid to generate too big payload. We advice to limit value to something like :- 20 characters for String, - 20 bytes for Opaque, - 10 instances for multi-instance resources.
+        - id: 2
+          name: Clear values
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: Clear all values :- all multiple resource as empty resource - all number to 0 - String to empty string - boolean to false, - opaque to empty byte array, - time to an 1st, 1970 in the UTC time zone - objlink to null link
+        - id: 3
+          name: Exec With Arguments
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: This resources can be used to test "Execute Operation" with Arguments.Sent Arguments can be read via "Arguments List"(4) resource.E.g. If you send an Exec /3441/0/3 with "3='stringValue',4" as arguments value, then /3441/0/4/3 will be 'stringValue' and /3441/0/4/4 will be an empty string.
+        - id: 4
+          name: Arguments List
+          operations: R
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: List of Arguments from last execute on "Exec With Arguments"(3) resource. This resource is not affected by the "Randomize values"(1) executable resource.
+        - id: 110
+          name: String Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be "initial value".
+        - id: 120
+          name: Integer Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be "1024".
+        - id: 130
+          name: Float Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Float
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be "3.14159".
+        - id: 140
+          name: Boolean Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Boolean
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be "true".
+        - id: 150
+          name: Opaque Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be the bytes sequence "0123456789ABCDEF" (Hexadecimal notation).
+        - id: 160
+          name: Time Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Time
+          rangeenumeration: ""
+          units: ""
+          description: 'Initial value must be the time to an 1st, 2000 in the UTC time zone. (Timestamp value : 946684800)'
+        - id: 170
+          name: ObjLink Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Objlnk
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be a link to instance 0 of Device Object 3 (3:0).
+        - id: 1110
+          name: Multiple String Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "initial value".
+        - id: 1120
+          name: Multiple Integer Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "1024".
+        - id: 1130
+          name: Multiple Float Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Float
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "3.14159".
+        - id: 1140
+          name: Multiple Boolean Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Boolean
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "true".
+        - id: 1150
+          name: Multiple Opaque Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "0123456789ABCDEF"(Hexadecimal notation of the bytes sequence).
+        - id: 1160
+          name: Multiple Time Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Time
+          rangeenumeration: ""
+          units: ""
+          description: 'Initial value must be 1 instance with ID 0 and value 1st, 2000 in the UTC time zone (Timestamp value : 946684800).'
+        - id: 1170
+          name: Multiple ObjLink Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Objlnk
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "3:0".
+- Name: LwM2M v1.1 Test Object
+  Description1: This object aims to make easier to do interoperability tests about LWM2M v1.1. It contains resources for each available datatype.
+  Description2: ""
+  ObjectID: 3442
+  ObjectURN: urn:oma:lwm2m:ext:3442
+  LWM2MVersion: "1.1"
+  ObjectVersion: "1.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: Reset values
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: Reset all resources of this object with their initial value.
+        - id: 1
+          name: Randomize values
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: Set random value to all resources. For multi-instance resources, the number of resource instances is also randomized.Randomization should avoid to generate too big payload. We advice to limit value to something like :- 20 characters for String, - 20 bytes for Opaque, - 10 instances for multi-instance resources.
+        - id: 2
+          name: Clear values
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: Clear all values :- all multiple resource as empty resource - all number to 0 - String to empty string - boolean to false, - opaque to empty byte array, - time to an 1st, 1970 in the UTC time zone - objlink to null link
+        - id: 3
+          name: Exec With Arguments
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: This resources can be used to test "Execute Operation" with Arguments.Sent Arguments can be read via "Arguments List"(4) resource.E.g. If you send an Exec /3441/0/3 with "3='stringValue',4" as arguments value, then /3441/0/4/3 will be 'stringValue' and /3441/0/4/4 will be an empty string.
+        - id: 4
+          name: Arguments List
+          operations: R
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: List of Arguments from last execute on "Exec With Arguments"(3) resource. This resource is not affected by "Randomize values"(1) executable resource.
+        - id: 5
+          name: Send Data
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: This resources can be used to test "Send Operation".When LWM2M client received the Execute Request, it must send data for each resources listed in "Resources to Send"(6) resource.By default LWM2M client chooses the Content format and Timeout to use for this Send Request, but Arguments can optionally be used to change it.Argument 0 must contain the Content Format code. e.g. 0='110' for SENML_JSON.Argument 1 must contain the request timeout in ms. e.g. 1='2000' for 2s timeout.
+        - id: 6
+          name: Resources to Send
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: List of path to LWM2M node (Object / Object Instance / Resource / Resource Instance) used by "Send Data "(5) resource. This resource is not affected by "Randomize values"(1) executable resource.
+        - id: 110
+          name: String Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be "initial value".
+        - id: 120
+          name: Integer Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be "1024".
+        - id: 125
+          name: Unsigned Integer Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Unsigned Integer
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 2^63 (9223372036854775808).
+        - id: 130
+          name: Float Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Float
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be "3.14159".
+        - id: 140
+          name: Boolean Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Boolean
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be "true".
+        - id: 150
+          name: Opaque Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be the bytes sequence "0123456789ABCDEF" (Hexadecimal notation).
+        - id: 160
+          name: Time Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Time
+          rangeenumeration: ""
+          units: ""
+          description: 'Initial value must be the time to an 1st, 2000 in the UTC time zone. (Timestamp value : 946684800)'
+        - id: 170
+          name: ObjLink Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Objlnk
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be a link to instance 0 of Device Object 3 (3:0).
+        - id: 180
+          name: CoreLnk Value
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Corelnk
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be a the "</3442>".
+        - id: 1110
+          name: Multiple String Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "initial value".
+        - id: 1120
+          name: Multiple Integer Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "1024".
+        - id: 1125
+          name: Multiple Unsigned Integer Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Unsigned Integer
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value 2^63 (9223372036854775808).
+        - id: 1130
+          name: Multiple Float Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Float
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "3.14159".
+        - id: 1140
+          name: Multiple Boolean Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Boolean
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "true".
+        - id: 1150
+          name: Multiple Opaque Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Opaque
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "0123456789ABCDEF"(Hexadecimal notation of the bytes sequence).
+        - id: 1160
+          name: Multiple Time Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Time
+          rangeenumeration: ""
+          units: ""
+          description: 'Initial value must be 1 instance with ID 0 and value 1st, 2000 in the UTC time zone (Timestamp value : 946684800).'
+        - id: 1170
+          name: Multiple ObjLink Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Objlnk
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "3:0".
+        - id: 1180
+          name: Multiple CoreLnk Value
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Corelnk
+          rangeenumeration: ""
+          units: ""
+          description: Initial value must be 1 instance with ID 0 and value "</3442>".
 - Name: HostDeviceInfo
   Description1: This LWM2M Object provides a range of host device related information which can be queried by the LWM2M Server. The host device is any integrated device with an embedded cellular radio module.
   Description2: ""
@@ -34599,6 +35960,44 @@
           rangeenumeration: ""
           units: 1/min
           description: The speed of the Fan.
+- Name: Lock
+  Description1: This LWM2M Object includes the Lock information.
+  Description2: ""
+  ObjectID: 10359
+  ObjectURN: urn:oma:lwm2m:x:10359
+  LWM2MVersion: "1.0"
+  ObjectVersion: "1.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 1
+          name: Lock Name
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: The name of the compressor.
+        - id: 50
+          name: Lock Status
+          operations: R
+          multipleinstances: Single
+          mandatory: Optional
+          type: Boolean
+          rangeenumeration: ""
+          units: ""
+          description: The status of the lock, 1:Locked, 0:Unlocked.
+        - id: 100
+          name: Lock Control
+          operations: E
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: 'Lock/Unlock the lock: Parameter: 1:Lock, 0:Unlock'
 - Name: Ultrasonic Sensor
   Description1: This LWM2M Object includes Ultrasonic Sensor information.
   Description2: ""
@@ -34934,6 +36333,190 @@
           rangeenumeration: ""
           units: ""
           description: Containing the error message of the last reset factory failure. This value MUST be set to an empty string on exec on /3/0/5, ideally before to send the response for Reset Factory resource (3/0/5) to avoid any race conditions
+- Name: Modbus Connection
+  Description1: This LwM2M Object is used to configure a Modbus protocol connection.
+  Description2: ""
+  ObjectID: 10374
+  ObjectURN: urn:oma:lwm2m:x:10374
+  LWM2MVersion: "1.0"
+  ObjectVersion: "1.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: Address
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: Address uniquely defining the Modbus connection within a given physical layer. The LwM2M Client is assumed to take the role of a Modbus client.For Modbus TCP, this is a hostname with optional port number, e.g. "10.11.12.13" or "example.com:502". Port number 502 is the default if not specified.For Modbus RTU, this is an implementation-defined unique identifier of a physical port. Suggested formats are UNIX-style device names (e.g. "/dev/tty1") or DOS-style port designations (e.g. "COM2"), but any strings may be used. Values that are valid for this LwM2M Client are listed in the "Available RTU ports" resource. The Client MAY treat configuration as invalid if Physical Layer Type is set to Modbus RTU and the Address is not equal to any of the "Available RTU ports".
+        - id: 1
+          name: Physical Layer Type
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..2
+          units: ""
+          description: 'Type of the physical layer to use for this connection.0: Modbus TCP1: Modbus RTU (RS-232)2: Modbus RTU (RS-485)Additional types MAY be specified in future revisions of this object.'
+        - id: 2
+          name: Enable
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Boolean
+          rangeenumeration: ""
+          units: ""
+          description: Enables or disables this Modbus connection.When set to false, this Modbus connection is administratively disabled and shall not function. Upon setting it to true, the LwM2M Client shall attempt opening the relevant connection and report the result of that operation in the "State" resource.
+        - id: 3
+          name: Baudrate
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: ""
+          units: bit/s
+          description: 'Baudrate for the RTU link layer, e.g. 9600, 115200, etc.NOTE: 8 data bits are always used.Mandatory if Physical Layer Type is set to Modbus RTU.'
+        - id: 4
+          name: Stop Bits
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 1..2
+          units: ""
+          description: Number of stop bits to use for the RTU link layer.Mandatory if Physical Layer Type is set to Modbus RTU.
+        - id: 5
+          name: Parity
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 0..2
+          units: ""
+          description: 'Parity bit type to use for the RTU link layer.0: none1: even2: oddMandatory if Physical Layer Type is set to Modbus RTU.'
+        - id: 6
+          name: Hardware Control Flow Mode
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 0..2
+          units: ""
+          description: 'Type of hardware flow control to use for the RTU link layer.0: none1: Set RTS flag when sending data2: Set RTS flag when NOT sending dataMandatory if Physical Layer Type is set to Modbus RTU.'
+        - id: 7
+          name: Available RTU Ports
+          operations: R
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: String
+          rangeenumeration: ""
+          units: ""
+          description: List of all valid values for the "Address" resource when Physical Layer Type is set to Modbus RTU. The Resource Instance IDs shall have no semantic meaning. The value of this resource shall be equal for all instances of this Object.Mandatory if this LwM2M Client has at least one physical port usable for Modbus RTU.
+        - id: 8
+          name: State
+          operations: R
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..4
+          units: ""
+          description: 'State of this Modbus connection.0: disabled (MUST NOT be used unless the "Enable" resource is set to false)1: connecting2: successfully connected3: invalid or unsupported configuration4: connection errorIf this resource reached the "connection error" state after having been successfully connected previously, the LwM2M Client SHOULD apply an implementation-specific deferred retry policy to try establishing the connection again.If the resource reached the "connection error" state as a direct result of setting the "Enable" resource to true or changing the configuration while in the enabled state, the LwM2M Client MAY apply an implementation-specific deferred retry policy to try establishing the connection again, or it MAY stay in the "connection error" state until further reconfiguration by the LwM2M Server.NOTE: The "connection error" state corresponds to any non-specific failure case. More specific error cases MAY be specified in future revisions of this object. LwM2M Server SHOULD interpret any unknown or invalid value reported by the LwM2M Client as equivalent to "connection error".'
+- Name: Modbus Register Cluster
+  Description1: This LwM2M Object represents a set of Modbus registers and acts as an interface to read and write their values.
+  Description2: ""
+  ObjectID: 10375
+  ObjectURN: urn:oma:lwm2m:x:10375
+  LWM2MVersion: "1.0"
+  ObjectVersion: "1.0"
+  MultipleInstances: Multiple
+  Mandatory: Optional
+  Resources:
+    Item:
+        - id: 0
+          name: Connection
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Objlnk
+          rangeenumeration: ""
+          units: ""
+          description: Link to an instance of the "Modbus Connection" object to use.
+        - id: 1
+          name: Register Type
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 1..4
+          units: ""
+          description: 'Type of Modbus objects to access.1: Coil2: Discrete Input3: Holding Register4: Input RegisterNote: For convenience, the values are equal to function codes corresponding to Modbus "read" operations for each object type.'
+        - id: 2
+          name: Unit ID
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..247, 255
+          units: ""
+          description: Server unit ID that this register cluster addresses.Special non-significant value of 255 is valid only for Modbus TCP connections.
+        - id: 3
+          name: Starting Register Address
+          operations: RW
+          multipleinstances: Single
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..65535
+          units: ""
+          description: Address of the first register that this register cluster addresses.
+        - id: 4
+          name: Quantity of Registers
+          operations: RW
+          multipleinstances: Single
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 1..2000
+          units: ""
+          description: Number of registers in this register cluster.If the Register Type is Holding Register or Input Register, the valid range for this resource is 1..125. Larger values are only supported for Coils and Discrete Inputs.If this resource is not present, the default value of 1 is assumed.
+        - id: 5
+          name: Values
+          operations: RW
+          multipleinstances: Multiple
+          mandatory: Mandatory
+          type: Integer
+          rangeenumeration: 0..65535
+          units: ""
+          description: 'List of values of the registers addressed by this register cluster.The Resource Instance IDs shall range from 0 to "Quantity of Registers - 1" (note: absolute register address cannot be used, because 65535 is a valid Modbus register ID, but not a valid LwM2M Resource Instance ID).When the Register Type is Coil or Discrete Input, "0" and "1" are the only valid values for each of the Resource Instances.When the Register Type is Discrete Input or Input Register, this resource shall behave as a read-only resource, i.e. as if the "Operations" attribute was "R".Even if the Register Type is Coil or Holding Register, any write operation that would result in the set of valid Resource Instance IDs being changed, shall result in a Bad Request error.'
+        - id: 6
+          name: Minimum Measured Values
+          operations: R
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 0..65535
+          units: ""
+          description: Minimum values recorded by each of the registers in this cluster.If this resource is supported, the Resource Instance IDs shall range from 0 to "Quantity of Registers - 1". Each Resource Instance shall hold the minimum value recorded by the corresponding Resource Instance of the "Values" resource since the configuration of this cluster (resources 0-4) has been last changed, or since the "Reset Minimum and Maximum Measured Values" resource has been last executed, whichever was later.
+        - id: 7
+          name: Maximum Measured Values
+          operations: R
+          multipleinstances: Multiple
+          mandatory: Optional
+          type: Integer
+          rangeenumeration: 0..65535
+          units: ""
+          description: Maximum values recorded by each of the registers in this cluster.If this resource is supported, the Resource Instance IDs shall range from 0 to "Quantity of Registers - 1". Each Resource Instance shall hold the maximum value recorded by the corresponding Resource Instance of the "Values" resource since the configuration of this cluster (resources 0-4) has been last changed, or since the "Reset Minimum and Maximum Measured Values" resource has been last executed, whichever was later.
+        - id: 8
+          name: Reset Minimum and Maximum Measured Values
+          operations: E
+          multipleinstances: Single
+          mandatory: Optional
+          type: ""
+          rangeenumeration: ""
+          units: ""
+          description: Resets the "Minimum Measured Values" and "Maximum Measured Values" resources.
 - Name: MQTT Broker
   Description1: This LwM2M Object provides the information to connect to an MQTT Broker i.e. URI, configuration, and keying material.
   Description2: ""
