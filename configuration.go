@@ -1,4 +1,4 @@
-package registry
+package ipso_registry
 
 // Configuration to control the registry.
 type Configuration struct {

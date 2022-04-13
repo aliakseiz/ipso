@@ -1,18 +1,18 @@
-package registry_test
+package ipso_registry_test
 
 import (
 	"reflect"
 	"testing"
 
-	"github.com/aliakseiz/ipso-registry/registry"
+	ipso_registry "github.com/aliakseiz/ipso-registry"
 )
 
 func TestDefaultConfiguration(t *testing.T) {
 	tests := []struct {
 		name string
-		want registry.Configuration
+		want ipso_registry.Configuration
 	}{
-		{name: "ValidDefaultConfiguration", want: registry.Configuration{
+		{name: "ValidDefaultConfiguration", want: ipso_registry.Configuration{
 			InitOnNew:      true,
 			SkipInitErrors: true,
 			Sanitize:       true,
@@ -20,7 +20,7 @@ func TestDefaultConfiguration(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := registry.DefaultConfiguration(); !reflect.DeepEqual(got, tt.want) {
+			if got := ipso_registry.DefaultConfiguration(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("DefaultConfiguration() = %v, want %v", got, tt.want)
 			}
 		})

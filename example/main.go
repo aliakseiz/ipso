@@ -3,12 +3,12 @@ package main
 import (
 	"log"
 
-	"github.com/aliakseiz/ipso-registry/registry"
+	ipso_registry "github.com/aliakseiz/ipso-registry"
 )
 
 func main() {
 	// Initialize registry from OMA API using default configuration
-	regAPI, err := registry.New(registry.DefaultConfiguration())
+	regAPI, err := ipso_registry.New(ipso_registry.DefaultConfiguration())
 	if err != nil {
 		panic(err)
 	}
@@ -18,14 +18,14 @@ func main() {
 	}
 
 	// Initialize another registry from file
-	cfg := registry.Configuration{
+	cfg := ipso_registry.Configuration{
 		InitOnNew:      false,
 		SkipInitErrors: false,
 		Sanitize:       false,
 		Sanitizer:      nil,
 	}
 
-	regFile, err := registry.New(cfg)
+	regFile, err := ipso_registry.New(cfg)
 	if err != nil {
 		panic(err)
 	}
@@ -39,7 +39,7 @@ func main() {
 	log.Printf("objComp length: %d", len(objComp))
 
 	// Sanitize registry imported from API
-	regFile.Sanitize(registry.DefaultSanitizer())
+	regFile.Sanitize(ipso_registry.DefaultSanitizer())
 	// Store sanitized registry in file
 	if err = regFile.Export("registry_sanitized.yaml"); err != nil {
 		panic(err)

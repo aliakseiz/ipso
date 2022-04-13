@@ -9,11 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Find object by ID and version
 - Find resource by object ID, object version and resource ID
+- Find resource by OIR string ("3303/0/5700")
 - Registry interface definition
 - YAML registries exported from OMA API
 
 ### Changed
 - Fixed golangci-linter complaints (v1.38.0)
+- Moved registry to top-level directory
 
 ### Fixed
 

@@ -1,25 +1,27 @@
-package registry_test
+package ipso_registry_test
 
 import (
 	"testing"
 
-	"github.com/aliakseiz/ipso-registry/registry"
+	ipso_registry "github.com/aliakseiz/ipso-registry"
 )
 
 func TestInstanceType_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
-		e    registry.InstanceType
+		e    ipso_registry.InstanceType
 		want string
 	}{
 		{
 			name: "Single instance",
-			e:    registry.InstanceTypeSingle,
+			e:    ipso_registry.InstanceTypeSingle,
 			want: "Single",
 		},
 		{
 			name: "Multiple instances",
-			e:    registry.InstanceTypeMultiple,
+			e:    ipso_registry.InstanceTypeMultiple,
 			want: "Multiple",
 		},
 	}
@@ -33,19 +35,21 @@ func TestInstanceType_String(t *testing.T) {
 }
 
 func TestMandatoryType_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
-		e    registry.MandatoryType
+		e    ipso_registry.MandatoryType
 		want string
 	}{
 		{
 			name: "Mandatory type",
-			e:    registry.MandatoryTypeMandatory,
+			e:    ipso_registry.MandatoryTypeMandatory,
 			want: "Mandatory",
 		},
 		{
 			name: "Optional type",
-			e:    registry.MandatoryTypeOptional,
+			e:    ipso_registry.MandatoryTypeOptional,
 			want: "Optional",
 		},
 	}
@@ -59,29 +63,31 @@ func TestMandatoryType_String(t *testing.T) {
 }
 
 func TestOperationType_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
-		e    registry.OperationType
+		e    ipso_registry.OperationType
 		want string
 	}{
 		{
 			name: "Read operation",
-			e:    registry.OperationTypeRead,
+			e:    ipso_registry.OperationTypeRead,
 			want: "R",
 		},
 		{
 			name: "Write operation",
-			e:    registry.OperationTypeWrite,
+			e:    ipso_registry.OperationTypeWrite,
 			want: "W",
 		},
 		{
 			name: "Read/write operations",
-			e:    registry.OperationTypeReadWrite,
+			e:    ipso_registry.OperationTypeReadWrite,
 			want: "RW",
 		},
 		{
 			name: "Execute operation",
-			e:    registry.OperationTypeExecute,
+			e:    ipso_registry.OperationTypeExecute,
 			want: "E",
 		},
 	}
@@ -95,59 +101,61 @@ func TestOperationType_String(t *testing.T) {
 }
 
 func TestResourceType_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
-		e    registry.ResourceType
+		e    ipso_registry.ResourceType
 		want string
 	}{
 		{
 			name: "Type boolean",
-			e:    registry.ResourceTypeBoolean,
+			e:    ipso_registry.ResourceTypeBoolean,
 			want: "Boolean",
 		},
 		{
 			name: "Type string",
-			e:    registry.ResourceTypeString,
+			e:    ipso_registry.ResourceTypeString,
 			want: "String",
 		},
 		{
 			name: "Type integer",
-			e:    registry.ResourceTypeInteger,
+			e:    ipso_registry.ResourceTypeInteger,
 			want: "Integer",
 		},
 		{
 			name: "Type unsigned integer",
-			e:    registry.ResourceTypeUnsignedInteger,
+			e:    ipso_registry.ResourceTypeUnsignedInteger,
 			want: "Unsigned Integer",
 		},
 		{
 			name: "Type float",
-			e:    registry.ResourceTypeFloat,
+			e:    ipso_registry.ResourceTypeFloat,
 			want: "Float",
 		},
 		{
 			name: "Type object link",
-			e:    registry.ResourceTypeObjLink,
+			e:    ipso_registry.ResourceTypeObjLink,
 			want: "Objlnk",
 		},
 		{
 			name: "Type core link",
-			e:    registry.ResourceTypeCoreLink,
+			e:    ipso_registry.ResourceTypeCoreLink,
 			want: "Corelnk",
 		},
 		{
 			name: "Type opaque",
-			e:    registry.ResourceTypeOpaque,
+			e:    ipso_registry.ResourceTypeOpaque,
 			want: "Opaque",
 		},
 		{
 			name: "Type time",
-			e:    registry.ResourceTypeTime,
+			e:    ipso_registry.ResourceTypeTime,
 			want: "Time",
 		},
 		{
 			name: "Type none (executable)",
-			e:    registry.ResourceTypeNone,
+			e:    ipso_registry.ResourceTypeNone,
 			want: "none",
 		},
 	}
@@ -161,24 +169,26 @@ func TestResourceType_String(t *testing.T) {
 }
 
 func TestDifferenceType_String(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name string
-		e    registry.DifferenceType
+		e    ipso_registry.DifferenceType
 		want string
 	}{
 		{
 			name: "Object added",
-			e:    registry.DifferenceTypeNewObject,
+			e:    ipso_registry.DifferenceTypeNewObject,
 			want: "New object added",
 		},
 		{
 			name: "Object removed",
-			e:    registry.DifferenceTypeObjectRemoved,
+			e:    ipso_registry.DifferenceTypeObjectRemoved,
 			want: "Object was removed",
 		},
 		{
 			name: "Unknown difference type",
-			e:    registry.DifferenceTypeUnknown,
+			e:    ipso_registry.DifferenceTypeUnknown,
 			want: "Unknown reason",
 		},
 	}

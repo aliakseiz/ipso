@@ -1,12 +1,14 @@
-// Package registry provides methods to create and control OMA IPSO registry.
-package registry
+// Package ipso_registry provides methods to create and control OMA IPSO registry.
+package ipso_registry
 
 import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -17,6 +19,7 @@ var (
 	errEmptyFilename = errors.New("filename is empty")
 	errObjNotFound   = errors.New("object not found")
 	errResNotFound   = errors.New("resource not found")
+	errInvalidOIR    = errors.New("invalid OIR")
 )
 
 // Registry an interface defining public library functions.
@@ -32,6 +35,7 @@ type Registry interface {
 	FindResourcesByID(id int32) ([]Resource, error)
 	FindResourcesByObjResIDs(objID, resID int32) ([]Resource, error)
 	FindResourceByObjIDObjVerResID(objID int32, objVer string, resID int32) (Resource, error)
+	FindResourceByOIR(oir string) (Resource, error)
 
 	GetObjects() []Object
 
@@ -44,7 +48,7 @@ type Registry interface {
 type Reg struct {
 	Config  Configuration
 	Objects []Object
-	// objIDVerMap map contains references to objects stored in Objects slice.
+	// objIDVerMap map contains references to the objects stored in Objects slice.
 	objIDVerMap map[int32]map[string]*Object // First key - ObjectID, second - Version
 }
 
@@ -313,6 +317,29 @@ func (r *Reg) FindResourceByObjIDObjVerResID(objID int32, objVer string, resID i
 	return Resource{}, errResNotFound
 }
 
+// FindResourceByOIR find specific resource in registry by OIR string (i.e. "3303/0/5700" - object/instance/resource).
+// Use latest object version. Return a single matching resource of specific object.
+// Return an empty resource and error, when resource or object not found.
+func (r *Reg) FindResourceByOIR(oir string) (Resource, error) {
+	objID, _, resID, err := parseOIRString(oir)
+	if err != nil {
+		return Resource{}, fmt.Errorf("cannot parse OIR (%s): %w", oir, err)
+	}
+
+	obj, err := r.FindObjectByIDAndVer(int32(objID), DefaultObjectVersion)
+	if err != nil {
+		return Resource{}, fmt.Errorf("cannot find object (%d ver.%s) %w", objID, DefaultObjectVersion, err)
+	}
+
+	for _, res := range obj.Resources.Item {
+		if res.ID == int32(resID) {
+			return res, nil
+		}
+	}
+
+	return Resource{}, errResNotFound
+}
+
 // GetObjects return all objects from registry.
 func (r *Reg) GetObjects() []Object {
 	return r.Objects
@@ -413,4 +440,29 @@ func getURL(url string) ([]byte, error) {
 	}()
 
 	return ioutil.ReadAll(resp.Body)
+}
+
+// parseOIRString parse OIR ("3303/0/5700" - object/instance/resource) string.
+func parseOIRString(oir string) (objectID, instanceNumber, resourceID int64, err error) {
+	ids := strings.Split(oir, "/")
+	if len(ids) != 3 {
+		return 0, 0, 0, errInvalidOIR
+	}
+
+	objectID, err = strconv.ParseInt(ids[0], 10, 64)
+	if err != nil {
+		return 0, 0, 0, err
+	}
+
+	instanceNumber, err = strconv.ParseInt(ids[1], 10, 64)
+	if err != nil {
+		return 0, 0, 0, err
+	}
+
+	resourceID, err = strconv.ParseInt(ids[2], 10, 64)
+	if err != nil {
+		return 0, 0, 0, err
+	}
+
+	return objectID, instanceNumber, resourceID, nil
 }

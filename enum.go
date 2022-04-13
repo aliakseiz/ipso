@@ -1,4 +1,4 @@
-package registry
+package ipso_registry
 
 // InstanceType constants.
 const (
