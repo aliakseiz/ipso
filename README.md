@@ -4,11 +4,13 @@
 [![Godoc][Godoc-Image]][Godoc-Url]
 [![ReportCard][ReportCard-Image]][ReportCard-Url]
 
+What is IPSO: https://omaspecworks.org/develop-with-oma-specworks/ipso-smart-objects/
+
 ---
 
 ## Functionality
 
-- Import registry from OMA API
+- Import registry from [OMA API](https://technical.openmobilealliance.org/OMNA/LwM2M/LwM2MRegistry.html)
 - Export registry to YAML-file
 - Import registry from file
 - Compare two registries
@@ -20,7 +22,7 @@
 
 ## Usage examples
 
-Initialize a registry from OMA API:
+Initialize a registry from [OMA API](https://technical.openmobilealliance.org/OMNA/LwM2M/LwM2MRegistry.html):
 ```go
 reg, err := registry.New(ipso.DefaultConfiguration())
 ```
