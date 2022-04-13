@@ -1,4 +1,4 @@
-package ipso_registry
+package ipso
 
 // Resource structure represents OMA Resource entity.
 type Resource struct {
