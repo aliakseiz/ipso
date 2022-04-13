@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/aliakseiz/goipso"
+	"github.com/aliakseiz/ipso"
 )
 
 func TestDefaultConfiguration(t *testing.T) {

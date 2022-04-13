@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	ipso "github.com/aliakseiz/goipso"
+	"github.com/aliakseiz/ipso"
 )
 
 func main() {

@@ -3,7 +3,7 @@ package ipso_test
 import (
 	"testing"
 
-	ipso "github.com/aliakseiz/goipso"
+	"github.com/aliakseiz/ipso"
 )
 
 func TestInstanceType_String(t *testing.T) {

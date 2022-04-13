@@ -1,4 +1,4 @@
-module github.com/aliakseiz/goipso
+module github.com/aliakseiz/ipso
 
 go 1.16
 
