@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
+
+### Security
+
+## [0.1.0] - 2022-04-13
+
+### Added
 - Find object by ID and version
 - Find resource by object ID, object version and resource ID
 - Find resource by OIR string ("3303/0/5700")
@@ -16,14 +30,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Fixed golangci-linter complaints (v1.38.0)
 - Moved registry to top-level directory
-
-### Fixed
-
-### Deprecated
-
-### Removed
-
-### Security
 
 ## [0.0.3] - 2021-03-07
 
