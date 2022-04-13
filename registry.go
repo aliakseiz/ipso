@@ -1,5 +1,5 @@
 // Package ipso_registry provides methods to create and control OMA IPSO registry.
-package ipso_registry
+package ipso
 
 import (
 	"encoding/json"

@@ -22,7 +22,7 @@
 
 Initialize a registry from OMA API:
 ```go
-reg, err := registry.New(ipso_registry.DefaultConfiguration())
+reg, err := registry.New(ipso.DefaultConfiguration())
 ```
 
 Export initialized registry to YAML file:
@@ -37,13 +37,13 @@ err := reg.Import("registry.yaml")
 
 Create a registry with custom configuration:
 ```go
-cfg := ipso_registry.Configuration{
+cfg := ipso.Configuration{
     InitOnNew:      false,
     SkipInitErrors: false,
     Sanitize: false,
 }
 
-reg, err := ipso_registry.New(cfg)
+reg, err := ipso.New(cfg)
 ```
 
 Compare two registries:
@@ -52,7 +52,7 @@ comp := reg1.Compare(reg2.GetRegistry())
 ```
 Remove unwanted strings from objects and resources description:
 ```go
-reg.Sanitize(ipso_registry.DefaultSanitizer())
+reg.Sanitize(ipso.DefaultSanitizer())
 ```
 
 ---

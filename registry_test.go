@@ -1,4 +1,4 @@
-package ipso_registry
+package ipso
 
 import (
 	"os"

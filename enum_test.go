@@ -1,9 +1,9 @@
-package ipso_registry_test
+package ipso_test
 
 import (
 	"testing"
 
-	ipso_registry "github.com/aliakseiz/ipso-registry"
+	ipso "github.com/aliakseiz/goipso"
 )
 
 func TestInstanceType_String(t *testing.T) {
@@ -11,17 +11,17 @@ func TestInstanceType_String(t *testing.T) {
 
 	tests := []struct {
 		name string
-		e    ipso_registry.InstanceType
+		e    ipso.InstanceType
 		want string
 	}{
 		{
 			name: "Single instance",
-			e:    ipso_registry.InstanceTypeSingle,
+			e:    ipso.InstanceTypeSingle,
 			want: "Single",
 		},
 		{
 			name: "Multiple instances",
-			e:    ipso_registry.InstanceTypeMultiple,
+			e:    ipso.InstanceTypeMultiple,
 			want: "Multiple",
 		},
 	}
@@ -39,17 +39,17 @@ func TestMandatoryType_String(t *testing.T) {
 
 	tests := []struct {
 		name string
-		e    ipso_registry.MandatoryType
+		e    ipso.MandatoryType
 		want string
 	}{
 		{
 			name: "Mandatory type",
-			e:    ipso_registry.MandatoryTypeMandatory,
+			e:    ipso.MandatoryTypeMandatory,
 			want: "Mandatory",
 		},
 		{
 			name: "Optional type",
-			e:    ipso_registry.MandatoryTypeOptional,
+			e:    ipso.MandatoryTypeOptional,
 			want: "Optional",
 		},
 	}
@@ -67,27 +67,27 @@ func TestOperationType_String(t *testing.T) {
 
 	tests := []struct {
 		name string
-		e    ipso_registry.OperationType
+		e    ipso.OperationType
 		want string
 	}{
 		{
 			name: "Read operation",
-			e:    ipso_registry.OperationTypeRead,
+			e:    ipso.OperationTypeRead,
 			want: "R",
 		},
 		{
 			name: "Write operation",
-			e:    ipso_registry.OperationTypeWrite,
+			e:    ipso.OperationTypeWrite,
 			want: "W",
 		},
 		{
 			name: "Read/write operations",
-			e:    ipso_registry.OperationTypeReadWrite,
+			e:    ipso.OperationTypeReadWrite,
 			want: "RW",
 		},
 		{
 			name: "Execute operation",
-			e:    ipso_registry.OperationTypeExecute,
+			e:    ipso.OperationTypeExecute,
 			want: "E",
 		},
 	}
@@ -105,57 +105,57 @@ func TestResourceType_String(t *testing.T) {
 
 	tests := []struct {
 		name string
-		e    ipso_registry.ResourceType
+		e    ipso.ResourceType
 		want string
 	}{
 		{
 			name: "Type boolean",
-			e:    ipso_registry.ResourceTypeBoolean,
+			e:    ipso.ResourceTypeBoolean,
 			want: "Boolean",
 		},
 		{
 			name: "Type string",
-			e:    ipso_registry.ResourceTypeString,
+			e:    ipso.ResourceTypeString,
 			want: "String",
 		},
 		{
 			name: "Type integer",
-			e:    ipso_registry.ResourceTypeInteger,
+			e:    ipso.ResourceTypeInteger,
 			want: "Integer",
 		},
 		{
 			name: "Type unsigned integer",
-			e:    ipso_registry.ResourceTypeUnsignedInteger,
+			e:    ipso.ResourceTypeUnsignedInteger,
 			want: "Unsigned Integer",
 		},
 		{
 			name: "Type float",
-			e:    ipso_registry.ResourceTypeFloat,
+			e:    ipso.ResourceTypeFloat,
 			want: "Float",
 		},
 		{
 			name: "Type object link",
-			e:    ipso_registry.ResourceTypeObjLink,
+			e:    ipso.ResourceTypeObjLink,
 			want: "Objlnk",
 		},
 		{
 			name: "Type core link",
-			e:    ipso_registry.ResourceTypeCoreLink,
+			e:    ipso.ResourceTypeCoreLink,
 			want: "Corelnk",
 		},
 		{
 			name: "Type opaque",
-			e:    ipso_registry.ResourceTypeOpaque,
+			e:    ipso.ResourceTypeOpaque,
 			want: "Opaque",
 		},
 		{
 			name: "Type time",
-			e:    ipso_registry.ResourceTypeTime,
+			e:    ipso.ResourceTypeTime,
 			want: "Time",
 		},
 		{
 			name: "Type none (executable)",
-			e:    ipso_registry.ResourceTypeNone,
+			e:    ipso.ResourceTypeNone,
 			want: "none",
 		},
 	}
@@ -173,22 +173,22 @@ func TestDifferenceType_String(t *testing.T) {
 
 	tests := []struct {
 		name string
-		e    ipso_registry.DifferenceType
+		e    ipso.DifferenceType
 		want string
 	}{
 		{
 			name: "Object added",
-			e:    ipso_registry.DifferenceTypeNewObject,
+			e:    ipso.DifferenceTypeNewObject,
 			want: "New object added",
 		},
 		{
 			name: "Object removed",
-			e:    ipso_registry.DifferenceTypeObjectRemoved,
+			e:    ipso.DifferenceTypeObjectRemoved,
 			want: "Object was removed",
 		},
 		{
 			name: "Unknown difference type",
-			e:    ipso_registry.DifferenceTypeUnknown,
+			e:    ipso.DifferenceTypeUnknown,
 			want: "Unknown reason",
 		},
 	}
