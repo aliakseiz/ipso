@@ -1,4 +1,4 @@
-package registry
+package ipso_registry
 
 const (
 	DefaultLwM2MVersion  = "1.0"

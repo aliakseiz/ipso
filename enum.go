@@ -1,4 +1,4 @@
-package registry
+package ipso_registry
 
 // InstanceType constants.
 const (
@@ -44,14 +44,18 @@ func (e OperationType) String() string {
 	return string(e)
 }
 
-// ResourceType constants.
+// ResourceType constants according to OMA-TS-LightweightM2M_Core-V1_2-20201110-A Appendix C. Data types (Normative).
 const (
-	ResourceTypeString  ResourceType = "String"
-	ResourceTypeBoolean ResourceType = "Boolean"
-	ResourceTypeInteger ResourceType = "Integer"
-	ResourceTypeFloat   ResourceType = "Float"
-	ResourceTypeObjLink ResourceType = "ObjLink"
-	ResourceTypeOpaque  ResourceType = "Opaque"
+	ResourceTypeString          ResourceType = "String"
+	ResourceTypeInteger         ResourceType = "Integer"
+	ResourceTypeUnsignedInteger ResourceType = "Unsigned Integer"
+	ResourceTypeFloat           ResourceType = "Float"
+	ResourceTypeBoolean         ResourceType = "Boolean"
+	ResourceTypeOpaque          ResourceType = "Opaque"
+	ResourceTypeTime            ResourceType = "Time"
+	ResourceTypeObjLink         ResourceType = "Objlnk"
+	ResourceTypeCoreLink        ResourceType = "Corelnk"
+	ResourceTypeNone            ResourceType = "none"
 )
 
 // ResourceType represents the type of data.
