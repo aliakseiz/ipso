@@ -14,6 +14,7 @@
 - Compare two registries
 - Find objects and resources by ID and version
 - Find resources by object ID and resource ID
+- Find resources by OIR string i.e. "3303/0/5700"
 - Sanitize objects and resources text fields
 ---
 
@@ -21,12 +22,12 @@
 
 Initialize a registry from OMA API:
 ```go
-reg, err := registry.New(registry.DefaultConfiguration())
+reg, err := registry.New(ipso_registry.DefaultConfiguration())
 ```
 
 Export initialized registry to YAML file:
 ```go
-err := regAPI.Export("registry.yaml")
+err := reg.Export("registry.yaml")
 ```
 
 Import a previously exported registry from YAML file:
@@ -36,13 +37,13 @@ err := reg.Import("registry.yaml")
 
 Create a registry with custom configuration:
 ```go
-cfg := registry.Configuration{
+cfg := ipso_registry.Configuration{
     InitOnNew:      false,
     SkipInitErrors: false,
     Sanitize: false,
 }
 
-reg, err := registry.New(cfg)
+reg, err := ipso_registry.New(cfg)
 ```
 
 Compare two registries:
@@ -51,7 +52,7 @@ comp := reg1.Compare(reg2.GetRegistry())
 ```
 Remove unwanted strings from objects and resources description:
 ```go
-reg.Sanitize(registry.DefaultSanitizer())
+reg.Sanitize(ipso_registry.DefaultSanitizer())
 ```
 
 ---
