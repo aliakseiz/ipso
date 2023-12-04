@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 - Updated registry.yaml and registry_sanitized.yaml
+- Updated `yaml` and `testify` dependencies
+- Upgraded go module from v1.16 to v1.21
 
 ### Fixed
 

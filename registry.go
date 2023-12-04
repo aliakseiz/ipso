@@ -6,8 +6,10 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -153,7 +155,7 @@ func (r *Reg) Export(filename string) error {
 		return err
 	}
 
-	return ioutil.WriteFile(filename, data, 0o600)
+	return os.WriteFile(filename, data, 0o600)
 }
 
 // Compare r and reg registries.
@@ -439,7 +441,7 @@ func getURL(url string) ([]byte, error) {
 		_ = resp.Body.Close()
 	}()
 
-	return ioutil.ReadAll(resp.Body)
+	return io.ReadAll(resp.Body)
 }
 
 // parseOIRString parse OIR ("3303/0/5700" - object/instance/resource) string.
