@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
@@ -94,12 +93,12 @@ func (r *Reg) Import(filename string) error {
 		return errEmptyFilename
 	}
 
-	data, err := ioutil.ReadFile(filename)
+	data, err := os.ReadFile(filename)
 	if err != nil {
 		return err
 	}
 
-	if err := yaml.Unmarshal(data, &r.Objects); err != nil {
+	if err = yaml.Unmarshal(data, &r.Objects); err != nil {
 		return err
 	}
 
@@ -145,12 +144,15 @@ func (r *Reg) ImportFromAPI() ([]Object, error) {
 }
 
 // Export store registry objects and resources in a specified file in YAML format.
+// Leading and trailing spaces are trimmed from text fields in the exported copy, the registry is not modified.
+// The YAML encoder writes multi-line text starting with a whitespace as a block scalar,
+// which cannot be parsed back by Import.
 func (r *Reg) Export(filename string) error {
 	if filename == "" {
 		return errEmptyFilename
 	}
 
-	data, err := yaml.Marshal(&r.Objects)
+	data, err := yaml.Marshal(trimObjects(r.Objects))
 	if err != nil {
 		return err
 	}
@@ -411,6 +413,35 @@ func (r *Reg) getObject(objectMeta ObjectMeta) (Object, error) {
 	}
 
 	return lwm2m.Object, nil
+}
+
+// trimObjects returns a deep copy of objects with leading and trailing spaces removed from text fields.
+func trimObjects(objects []Object) []Object {
+	trimmed := make([]Object, len(objects))
+
+	for i, object := range objects {
+		object.Name = strings.TrimSpace(object.Name)
+		object.Description1 = strings.TrimSpace(object.Description1)
+		object.Description2 = strings.TrimSpace(object.Description2)
+
+		if object.Resources.Item != nil {
+			items := make([]Resource, len(object.Resources.Item))
+
+			for j, resource := range object.Resources.Item {
+				resource.Name = strings.TrimSpace(resource.Name)
+				resource.Description = strings.TrimSpace(resource.Description)
+				resource.RangeEnumeration = strings.TrimSpace(resource.RangeEnumeration)
+				resource.Units = strings.TrimSpace(resource.Units)
+				items[j] = resource
+			}
+
+			object.Resources.Item = items
+		}
+
+		trimmed[i] = object
+	}
+
+	return trimmed
 }
 
 func objToMap(objects []Object) map[int32]map[string]*Object {

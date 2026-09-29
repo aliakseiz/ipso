@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 ### Changed
-- Updated registry.yaml and registry_sanitized.yaml
+- Updated registry.yaml and registry_sanitized.yaml (513 objects, +93)
 - Updated `yaml` and `testify` dependencies
 - Upgraded go module from v1.16 to v1.21
 
 ### Fixed
+- `Export` produced YAML that `Import` could not parse (multi-line text starting with a whitespace)
 
 ### Deprecated
 
