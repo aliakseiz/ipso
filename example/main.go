@@ -1,49 +1,76 @@
+// Command example shows how to load, search, compare and export the IPSO registry.
+//
+// By default it uses the registry embedded in the module and works without the network and file system.
+// With -fetch it downloads the registry from the OMA API, stores it as YAML in the -out directory
+// and compares it with the embedded one.
 package main
 
 import (
+	"flag"
 	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/aliakseiz/ipso"
+	"github.com/aliakseiz/ipso/embedded"
 )
 
+const outDirMode = 0o750
+
 func main() {
-	// Initialize registry from OMA API using default configuration
-	regAPI, err := ipso.New(ipso.DefaultConfiguration())
+	fetch := flag.Bool("fetch", false, "download the registry from the OMA API and write YAML files")
+	out := flag.String("out", ".", "directory for the files written with -fetch")
+
+	flag.Parse()
+
+	reg, err := embedded.New()
 	if err != nil {
-		panic(err)
-	}
-	// Store imported registry in the file
-	if err = regAPI.Export("registry.yaml"); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	// Initialize another registry from file
-	cfg := ipso.Configuration{
-		InitOnNew:      false,
-		SkipInitErrors: false,
-		Sanitize:       false,
-		Sanitizer:      nil,
-	}
-
-	regFile, err := ipso.New(cfg)
+	res, err := reg.FindResourceByOIR("3303/0/5700")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	if err = regFile.Import("registry.yaml"); err != nil {
-		panic(err)
+	log.Printf("3303/0/5700: %s (%s)", res.Name, res.Type)
+
+	if !*fetch {
+		return
 	}
 
-	objComp := regFile.Compare(regAPI.GetRegistry())
-
-	log.Printf("objComp length: %d", len(objComp))
-
-	// Sanitize registry imported from API
-	regFile.Sanitize(ipso.DefaultSanitizer())
-	// Store sanitized registry in file
-	if err = regFile.Export("registry_sanitized.yaml"); err != nil {
-		panic(err)
+	err = syncFromAPI(reg, *out)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	log.Printf("finished successfully")
+}
+
+// syncFromAPI downloads the registry from the OMA API, stores it in dir, and logs how it differs from base.
+//
+//nolint:wrapcheck // main logs the error as is
+func syncFromAPI(base *ipso.Reg, dir string) error {
+	err := os.MkdirAll(dir, outDirMode)
+	if err != nil {
+		return err
+	}
+
+	regAPI, err := ipso.New(ipso.DefaultConfiguration())
+	if err != nil {
+		return err
+	}
+
+	file := filepath.Join(dir, "registry.yaml")
+
+	err = regAPI.ExportFile(file)
+	if err != nil {
+		return err
+	}
+
+	log.Printf("differences against embedded registry: %d", len(base.Compare(regAPI)))
+
+	regAPI.Sanitize(ipso.DefaultSanitizer())
+
+	return regAPI.ExportFile(filepath.Join(dir, "registry_sanitized.yaml"))
 }

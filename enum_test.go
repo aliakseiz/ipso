@@ -1,202 +1,51 @@
 package ipso_test
 
 import (
+	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/aliakseiz/ipso"
 )
 
-func TestInstanceType_String(t *testing.T) {
+func TestEnums_String(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		name string
-		e    ipso.InstanceType
+	tests := map[string]struct {
+		e    fmt.Stringer
 		want string
 	}{
-		{
-			name: "Single instance",
-			e:    ipso.InstanceTypeSingle,
-			want: "Single",
-		},
-		{
-			name: "Multiple instances",
-			e:    ipso.InstanceTypeMultiple,
-			want: "Multiple",
-		},
+		"InstanceType/single":             {ipso.InstanceTypeSingle, "Single"},
+		"InstanceType/multiple":           {ipso.InstanceTypeMultiple, "Multiple"},
+		"MandatoryType/mandatory":         {ipso.MandatoryTypeMandatory, "Mandatory"},
+		"MandatoryType/optional":          {ipso.MandatoryTypeOptional, "Optional"},
+		"OperationType/read":              {ipso.OperationTypeRead, "R"},
+		"OperationType/write":             {ipso.OperationTypeWrite, "W"},
+		"OperationType/read-write":        {ipso.OperationTypeReadWrite, "RW"},
+		"OperationType/execute":           {ipso.OperationTypeExecute, "E"},
+		"OperationType/empty":             {ipso.OperationTypeEmpty, ""},
+		"ResourceType/boolean":            {ipso.ResourceTypeBoolean, "Boolean"},
+		"ResourceType/string":             {ipso.ResourceTypeString, "String"},
+		"ResourceType/integer":            {ipso.ResourceTypeInteger, "Integer"},
+		"ResourceType/unsigned-integer":   {ipso.ResourceTypeUnsignedInteger, "Unsigned Integer"},
+		"ResourceType/float":              {ipso.ResourceTypeFloat, "Float"},
+		"ResourceType/object-link":        {ipso.ResourceTypeObjLink, "Objlnk"},
+		"ResourceType/core-link":          {ipso.ResourceTypeCoreLink, "Corelnk"},
+		"ResourceType/opaque":             {ipso.ResourceTypeOpaque, "Opaque"},
+		"ResourceType/time":               {ipso.ResourceTypeTime, "Time"},
+		"ResourceType/empty (executable)": {ipso.ResourceTypeEmpty, ""},
+		"ResourceType/none":               {ipso.ResourceTypeNone, "none"},
+		"DifferenceType/new-object":       {ipso.DifferenceTypeNewObject, "New object added"},
+		"DifferenceType/object-removed":   {ipso.DifferenceTypeObjectRemoved, "Object was removed"},
+		"DifferenceType/unknown":          {ipso.DifferenceTypeUnknown, "Unknown reason"},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.e.String(); got != tt.want {
-				t.Errorf("String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
-func TestMandatoryType_String(t *testing.T) {
-	t.Parallel()
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
 
-	tests := []struct {
-		name string
-		e    ipso.MandatoryType
-		want string
-	}{
-		{
-			name: "Mandatory type",
-			e:    ipso.MandatoryTypeMandatory,
-			want: "Mandatory",
-		},
-		{
-			name: "Optional type",
-			e:    ipso.MandatoryTypeOptional,
-			want: "Optional",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.e.String(); got != tt.want {
-				t.Errorf("String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestOperationType_String(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name string
-		e    ipso.OperationType
-		want string
-	}{
-		{
-			name: "Read operation",
-			e:    ipso.OperationTypeRead,
-			want: "R",
-		},
-		{
-			name: "Write operation",
-			e:    ipso.OperationTypeWrite,
-			want: "W",
-		},
-		{
-			name: "Read/write operations",
-			e:    ipso.OperationTypeReadWrite,
-			want: "RW",
-		},
-		{
-			name: "Execute operation",
-			e:    ipso.OperationTypeExecute,
-			want: "E",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.e.String(); got != tt.want {
-				t.Errorf("String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestResourceType_String(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name string
-		e    ipso.ResourceType
-		want string
-	}{
-		{
-			name: "Type boolean",
-			e:    ipso.ResourceTypeBoolean,
-			want: "Boolean",
-		},
-		{
-			name: "Type string",
-			e:    ipso.ResourceTypeString,
-			want: "String",
-		},
-		{
-			name: "Type integer",
-			e:    ipso.ResourceTypeInteger,
-			want: "Integer",
-		},
-		{
-			name: "Type unsigned integer",
-			e:    ipso.ResourceTypeUnsignedInteger,
-			want: "Unsigned Integer",
-		},
-		{
-			name: "Type float",
-			e:    ipso.ResourceTypeFloat,
-			want: "Float",
-		},
-		{
-			name: "Type object link",
-			e:    ipso.ResourceTypeObjLink,
-			want: "Objlnk",
-		},
-		{
-			name: "Type core link",
-			e:    ipso.ResourceTypeCoreLink,
-			want: "Corelnk",
-		},
-		{
-			name: "Type opaque",
-			e:    ipso.ResourceTypeOpaque,
-			want: "Opaque",
-		},
-		{
-			name: "Type time",
-			e:    ipso.ResourceTypeTime,
-			want: "Time",
-		},
-		{
-			name: "Type none (executable)",
-			e:    ipso.ResourceTypeNone,
-			want: "none",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.e.String(); got != tt.want {
-				t.Errorf("String() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestDifferenceType_String(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name string
-		e    ipso.DifferenceType
-		want string
-	}{
-		{
-			name: "Object added",
-			e:    ipso.DifferenceTypeNewObject,
-			want: "New object added",
-		},
-		{
-			name: "Object removed",
-			e:    ipso.DifferenceTypeObjectRemoved,
-			want: "Object was removed",
-		},
-		{
-			name: "Unknown difference type",
-			e:    ipso.DifferenceTypeUnknown,
-			want: "Unknown reason",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.e.String(); got != tt.want {
-				t.Errorf("String() = %v, want %v", got, tt.want)
-			}
+			require.Equal(t, tt.want, tt.e.String())
 		})
 	}
 }
